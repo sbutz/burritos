@@ -1,6 +1,4 @@
-.section .text
-
-.extern init
+.section multiboot
 
 #define MB_MAGIC 0x1badb002
 #define MB_FLAGS 0x0
@@ -12,6 +10,10 @@
 .int	MB_FLAGS
 .int	MB_CHECKSUM
 
+
+.section .text
+
+.extern init
 
 .global _start
 _start:

@@ -3,7 +3,7 @@ LD = ld
 
 ASFLAGS = -m32
 CFLAGS = -m32 -Wall -g -fno-stack-protector -nostdinc
-LDFLAGS = -n -melf_i386 -Ttext=0x100000
+LDFLAGS = -n -melf_i386 -Tkernel.ld
 
 
 SRCS = $(shell find -name '*.[cS]')
