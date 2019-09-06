@@ -9,6 +9,21 @@ LDFLAGS = -n -melf_i386 -Ttext=0x100000
 SRCS = $(shell find -name '*.[cS]')
 OBJS = $(addsuffix .o,$(basename $(SRCS)))
 
+run: iso
+	qemu-system-i386 -cdrom os.iso
+
+iso: kernel
+	cp kernel iso/boot/kernel
+	genisoimage \
+		-R \
+		-b boot/grub/stage2_eltorito \
+		-no-emul-boot \
+		-boot-load-size 4 \
+		-A os \
+		-input-charset utf8 \
+		-quiet \
+		-boot-info-table \
+		-o os.iso iso/
 
 kernel: $(OBJS)
 	$(LD) $(LDFLAGS) -o $@ $^
@@ -21,4 +36,4 @@ kernel: $(OBJS)
 
 .PHONY: clean
 clean:
-	rm $(OBJS) kernel
+	rm $(OBJS) kernel os.iso
