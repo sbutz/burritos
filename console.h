@@ -1,6 +1,8 @@
 #define BUFFER_SIZE	4000
 #define MAX_LINES	25
 #define MAX_CHARS	80
+#define CHAR_SIZE	2
+#define LINE_SIZE	(MAX_CHARS * CHAR_SIZE)
 
 #define BLACK		0x0
 #define BLUE		0x1
@@ -20,4 +22,5 @@
 #define WHITE		0xF
 
 void kclear();
-int kprintf(const  char *str);
+void kscroll();
+int kprintf(const  char *fmt);
