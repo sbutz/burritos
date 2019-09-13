@@ -3,7 +3,10 @@ ENTRY(_start)
 SECTIONS
 {
 	/*
-	 * . ist die aktuelle Position in der Datei
+	 * . ist die aktuelle Position in der Datei.
+	 *
+	 * Adresse an die der Kernel geladen wird.
+	 * Mindestends jedoch 1MB (entspricht 0x100000).
 	 */
 	. = 0x100000;
 
