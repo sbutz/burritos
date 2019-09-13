@@ -23,5 +23,4 @@
 
 void kclear();
 void kscroll();
-int kprintf(const  char *fmt);
-int _kprintf(const  char *fmt, ...);
+int kprintf(const  char *fmt, ...);

@@ -34,7 +34,7 @@ void kscroll() {
 	cursor -= LINE_SIZE;
 }
 
-int _kprintf(const char *fmt, ...) {
+int kprintf(const char *fmt, ...) {
 	int i, total;
 	va_list args;
 
