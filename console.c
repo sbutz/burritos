@@ -9,9 +9,9 @@ static int cursor = 0;
 static char HEX[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
 	'b', 'c', 'd', 'e', 'f' };
 
-void _printc(char c);
-int _printp(void *ptr);
-int _printh(unsigned long num);
+static void _printc(char c);
+static int _printp(void *ptr);
+static int _printh(unsigned long num);
 
 void kclear() {
 	int i;
@@ -60,14 +60,13 @@ int kprintf(const char *fmt, ...) {
 	return total;
 }
 
-void _printc(char c) {
+static void _printc(char c) {
 	if (cursor >= BUFFER_SIZE)
 		kscroll();
 
 	switch(c) {
 		case '\n':
-			if (cursor  % 160)
-				cursor += 160 - (cursor % 160) - 2;
+			cursor += 160 - (cursor % 160) - 2;
 			break;
 		default:
 			video[cursor] = c;
@@ -77,11 +76,11 @@ void _printc(char c) {
 	cursor += 2;
 }
 
-int _printp(void *ptr) {
+static int _printp(void *ptr) {
 	return _printh((unsigned long) ptr);
 }
 
-int _printh(unsigned long num) {
+static int _printh(unsigned long num) {
 	int i, total, digit;
 
 	_printc('0');

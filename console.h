@@ -1,3 +1,6 @@
+#ifndef CONSOLE_H
+#define CONSOLE_H
+
 #define BUFFER_SIZE	4000
 #define MAX_LINES	25
 #define MAX_CHARS	80
@@ -24,3 +27,5 @@
 void kclear();
 void kscroll();
 int kprintf(const  char *fmt, ...);
+
+#endif
