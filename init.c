@@ -2,6 +2,8 @@
 
 void init()
 {
+	int a = 0;
+	int b = 0;
 	kclear();
 
 	kprintf("Hello World01\n");
@@ -30,9 +32,10 @@ void init()
 	kprintf("Hello World24\n");
 	kprintf("Hello World25\n");
 	kprintf("Hello World26\n");
-	kprintf("Hello World26\n");
-	kprintf("Hello World26\n");
-	kprintf("Hello World26\n");
-	kprintf("Hello World26\n");
-	kprintf("Hello World26\n");
+	kprintf("Hello World27\n");
+	kprintf("Hello World28\n");
+	kprintf("Hello World29\n");
+	kprintf("Hello World30\n");
+	_kprintf("Num: %x\n", 0xa3);
+	_kprintf("&a: %p, &b: %p\n", &a, &b);
 }

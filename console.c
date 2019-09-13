@@ -1,9 +1,17 @@
+#include <stdarg.h>
+
 #include "console.h"
 
 // Speicher ist 4kB gross.
 // 80x25 Zeichen.
 static char *video = (char*) 0xb8000;
 static int cursor = 0;
+static char HEX[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
+	'b', 'c', 'd', 'e', 'f' };
+
+void _printc(char c);
+int _printp(void *ptr);
+int _printh(unsigned long num);
 
 void kclear() {
 	int i;
@@ -26,27 +34,65 @@ void kscroll() {
 	cursor -= LINE_SIZE;
 }
 
-int kprintf(const char *fmt) {
-	int i, offset;
+int _kprintf(const char *fmt, ...) {
+	int i, total;
+	va_list args;
 
-	// bis Nullterminator erreicht ist
-	for (i = 0; fmt[i] != '\0'; i++) {
-		offset = cursor + i * 2;
-
-		if (offset >= BUFFER_SIZE)
-			kscroll();
-
-		switch(fmt[i]) {
-			case '\n':
-				if ((cursor + i * 2)  % 160)
-					cursor += 160 - ((cursor + i * 2) % 160) - 2;
-				break;
-			default:
-				video[cursor + i * 2] = fmt[i];
-				video[cursor + i * 2 + 1] = LIGHT_GRAY;
+	va_start(args, fmt);
+	for (i = 0, total = 0; fmt[i] != '\0'; i++) {
+		if (i > 0 && fmt[i - 1] == '%') {
+			cursor -= 2;
+			switch(fmt[i]) {
+				case 'p':
+					total += _printp(va_arg(args, void *));
+					break;
+				case 'x':
+					total += _printh(va_arg(args, unsigned long));
+					break;
+			}
+		} else {
+			_printc(fmt[i]);
+			total++;
 		}
 	}
-	cursor += i * 2;
+	va_end(args);
 
-	return  i;
+	return total;
+}
+
+void _printc(char c) {
+	if (cursor >= BUFFER_SIZE)
+		kscroll();
+
+	switch(c) {
+		case '\n':
+			if (cursor  % 160)
+				cursor += 160 - (cursor % 160) - 2;
+			break;
+		default:
+			video[cursor] = c;
+			video[cursor + 1] = LIGHT_GRAY;
+	}
+
+	cursor += 2;
+}
+
+int _printp(void *ptr) {
+	return _printh((unsigned long) ptr);
+}
+
+int _printh(unsigned long num) {
+	int i, total, digit;
+
+	_printc('0');
+	_printc('x');
+	total = 2;
+
+	for (i = 0; i < 32; i += 4) {
+		digit = (num << i) >> 28;
+		_printc(HEX[digit]);
+		total++;
+	}
+
+	return total;
 }
