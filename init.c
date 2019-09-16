@@ -1,12 +1,11 @@
 #include "console.h"
+#include "gdt.h"
 
 void init()
 {
-	int i;
-
 	kclear();
+	kprintf("sButz OS v1.0\n\n");
 
-	for (i = 0; i < 50; i++) {
-		kprintf("i = %x, &i = %p\n", i, &i);
-	}
+	kprintf("[*] Init GDT\n");
+	gdt_init();
 }
