@@ -7,8 +7,10 @@ LDFLAGS = -n -melf_i386 -Tkernel.ld
 
 
 LIBS = -I $(CURDIR)/libc
-SRCS = $(shell find -name '*.[cS]')
-OBJS = $(addsuffix .o,$(basename $(SRCS)))
+C_SRCS = $(shell find -name '*.[c]')
+OBJS = $(addsuffix .o,$(basename $(C_SRCS)))
+AS_SRCS = $(shell find -name '*.[S]')
+OBJS += $(addsuffix .s,$(basename $(AS_SRCS)))
 
 run: iso
 	qemu-system-i386 -cdrom os.iso
@@ -32,9 +34,9 @@ kernel: $(OBJS)
 %.o: %.c
 	$(CC) $(CFLAGS) $(LIBS) -c -o $@ $^
 
-%.o: %.S
+%.s: %.S
 	$(CC) $(ASFLAGS) -c -o $@ $^
 
 .PHONY: clean
 clean:
-	rm $(OBJS) kernel os.iso
+	rm -f $(OBJS) kernel os.iso
