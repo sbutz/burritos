@@ -9,3 +9,4 @@ gdt_load:
 	mov %ax, %fs
 	mov %ax, %gs
 	mov %ax, %ss
+	ret
