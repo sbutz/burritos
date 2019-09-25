@@ -26,9 +26,35 @@ struct idt_description {
 	void *pointer;
 } __attribute__((packed));
 
+struct stack_state {
+	/* Pushed by common interrupt helper */
+
+	uint32_t eax;
+	uint32_t ebx;
+	uint32_t ecx;
+	uint32_t edx;
+	uint32_t esi;
+	uint32_t edi;
+	uint32_t ebp;
+
+	/* Pushed by interrupt helper */
+	uint32_t intr;
+	/* Pushed by int instruction or manually */
+	uint32_t error_code;
+
+	/* Pushed by INT instruction */
+	uint32_t eip;
+	uint32_t cs;
+	uint32_t eflags;
+	uint32_t ss;
+	uint32_t esp;
+} __attribute__((packed));
+
 void idt_init();
+void intr_handler(struct stack_state stack);
 
 struct idt_entry idt[IDT_ENTRIES];
 struct idt_description idtp;
+
 
 #endif

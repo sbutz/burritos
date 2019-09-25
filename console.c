@@ -11,7 +11,7 @@ static char HEX[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
 
 static void _printc(char c);
 static int _printp(void *ptr);
-static int _printh(unsigned long num);
+static int _printh(unsigned int num);
 
 void kclear() {
 	int i;
@@ -47,7 +47,7 @@ int kprintf(const char *fmt, ...) {
 					total += _printp(va_arg(args, void *));
 					break;
 				case 'x':
-					total += _printh(va_arg(args, unsigned long));
+					total += _printh(va_arg(args, unsigned int));
 					break;
 			}
 		} else {
@@ -77,10 +77,10 @@ static void _printc(char c) {
 }
 
 static int _printp(void *ptr) {
-	return _printh((unsigned long) ptr);
+	return _printh((unsigned int) ptr);
 }
 
-static int _printh(unsigned long num) {
+static int _printh(unsigned int num) {
 	int i, total, digit;
 
 	_printc('0');
