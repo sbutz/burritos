@@ -17,8 +17,7 @@ void init()
 	x = 1;
 	y = 0;
 	z = x/y;
-	//asm volatile("int $0x0");
 
-	/* Interrupts aktivieren */
+	/* Hardware-Interrupts aktivieren */
 	asm volatile("sti");
 }
