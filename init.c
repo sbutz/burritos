@@ -13,8 +13,12 @@ void init()
 	kprintf("[*] Init Interrupt Descriptor Table\n");
 	idt_init();
 
-	asm volatile("int $0x1");
-	kprintf("After Itr\n");
-	asm volatile("int $0x2");
-	kprintf("After Itr\n");
+	int x, y, z;
+	x = 1;
+	y = 0;
+	z = x/y;
+	//asm volatile("int $0x0");
+
+	/* Interrupts aktivieren */
+	asm volatile("sti");
 }

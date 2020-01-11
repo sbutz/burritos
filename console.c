@@ -13,7 +13,8 @@ static void _printc(char c);
 static int _printp(void *ptr);
 static int _printh(unsigned int num);
 
-void kclear() {
+void kclear()
+{
 	int i;
 
 	for (i = 0; i < BUFFER_SIZE; i++)
@@ -21,7 +22,8 @@ void kclear() {
 	cursor = 0;
 }
 
-void kscroll() {
+void kscroll()
+{
 	int i;
 
 	for (i = 0; i < BUFFER_SIZE - LINE_SIZE; i++) {
@@ -34,7 +36,8 @@ void kscroll() {
 	cursor -= LINE_SIZE;
 }
 
-int kprintf(const char *fmt, ...) {
+int kprintf(const char *fmt, ...)
+{
 	int i, total;
 	va_list args;
 
@@ -60,7 +63,8 @@ int kprintf(const char *fmt, ...) {
 	return total;
 }
 
-static void _printc(char c) {
+static void _printc(char c)
+{
 	if (cursor >= BUFFER_SIZE)
 		kscroll();
 
@@ -76,11 +80,13 @@ static void _printc(char c) {
 	cursor += 2;
 }
 
-static int _printp(void *ptr) {
+static int _printp(void *ptr)
+{
 	return _printh((unsigned int) ptr);
 }
 
-static int _printh(unsigned int num) {
+static int _printh(unsigned int num)
+{
 	int i, total, digit;
 
 	_printc('0');

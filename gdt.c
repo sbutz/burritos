@@ -5,7 +5,8 @@
 extern void gdt_load();
 
 static void gdt_set_entry(unsigned int n, uint32_t base, uint32_t limit,
-	uint8_t access, uint8_t flags) {
+	uint8_t access, uint8_t flags)
+{
 
 	gdt[n].limit_lower = limit & 0xffff;
 	gdt[n].base_lower = base & 0xffff;
@@ -15,7 +16,8 @@ static void gdt_set_entry(unsigned int n, uint32_t base, uint32_t limit,
 	gdt[n].base_higher = base >> 24;
 }
 
-void gdt_init() {
+void gdt_init()
+{
 	gdtp.limit = GDT_ENTRIES * sizeof(struct gdt_entry) - 1;
 	gdtp.pointer = gdt;
 

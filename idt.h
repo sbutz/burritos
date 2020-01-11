@@ -26,9 +26,8 @@ struct idt_description {
 	void *pointer;
 } __attribute__((packed));
 
-struct stack_state {
+struct cpu_state {
 	/* Pushed by common interrupt helper */
-
 	uint32_t eax;
 	uint32_t ebx;
 	uint32_t ecx;
@@ -51,7 +50,7 @@ struct stack_state {
 } __attribute__((packed));
 
 void idt_init();
-void intr_handler(struct stack_state stack);
+void intr_handler(struct cpu_state stack);
 
 struct idt_entry idt[IDT_ENTRIES];
 struct idt_description idtp;
