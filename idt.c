@@ -1,10 +1,10 @@
 #include <stdint.h>
 
-#include "idt.h"
+#include "asm.h"
 #include "console.h"
+#include "idt.h"
 
 extern void idt_load();
-extern void out_b(uint16_t port, uint8_t data);
 
 /* Exceptions */
 extern void intr_stub_0();
@@ -209,7 +209,7 @@ void intr_handler(struct cpu_state cpu)
 		kprintf("Exception %x, halt Kernel\n", cpu.error_code);
 
 		while (1)
-			asm volatile("cli; hlt");
+			halt();
 	}
 	/* IRQ */
 	else if (cpu.intr < 0x30)
