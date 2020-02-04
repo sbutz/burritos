@@ -7,13 +7,13 @@ halt:
 
 .globl inb
 inb:
-	mov %dx, -2(%ebp)
+	mov 4(%esp), %dx
 	inb %dx, %al
 	ret
 
 .globl outb
 outb:
-	mov %dx, -3(%ebp)
-	mov %al, -1(%ebp)
+	mov 4(%esp), %dx
+	mov 8(%esp), %ax
 	outb %al, %dx
 	ret
