@@ -13,7 +13,12 @@ AS_SRCS = $(shell find -name '*.[S]')
 OBJS += $(addsuffix .s,$(basename $(AS_SRCS)))
 
 run: iso
-	qemu-system-i386 -cdrom os.iso
+	qemu-system-i386 \
+		-m 32 \
+		-no-reboot \
+		-drive format=raw,media=cdrom,file=os.iso \
+		-serial stdio \
+		-vga std
 
 iso: kernel
 	cp kernel iso/boot/kernel
@@ -26,7 +31,8 @@ iso: kernel
 		-input-charset utf8 \
 		-quiet \
 		-boot-info-table \
-		-o os.iso iso/
+		-o os.iso \
+		iso/
 
 kernel: $(OBJS)
 	$(LD) $(LDFLAGS) -o $@ $^

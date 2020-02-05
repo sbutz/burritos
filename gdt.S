@@ -1,4 +1,5 @@
 .section .text
+
 .extern gdtp
 .globl gdt_load
 gdt_load:
