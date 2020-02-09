@@ -12,7 +12,7 @@ idt_load:
 		# Error Code
 		push $0x0
 		# Interrupt Nummer
-		push $0x\num
+		push $\num
 		jmp common_intr_handler
 .endm
 

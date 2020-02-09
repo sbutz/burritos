@@ -1,9 +1,14 @@
 .section .text
 
-.globl halt
-halt:
-	cli
+.globl relax
+relax:
 	hlt
+	ret
+
+.globl disable_irqs
+disable_irqs:
+	cli
+	ret
 
 .globl inb
 inb:

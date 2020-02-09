@@ -24,8 +24,8 @@ _start:
 	call init
 
 	// Nichts mehr zu tun, also Interrupts unterbinden und CPU anhalten
-_stop:
 	cli
+_stop:
 	hlt
 	jmp _stop
 
