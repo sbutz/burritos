@@ -1,9 +1,9 @@
 #include <stdint.h>
 
-#include "asm.h"
 #include "console.h"
 #include "idt.h"
 #include "pic.h"
+#include "system.h"
 
 extern void idt_load();
 
@@ -175,7 +175,7 @@ void handle_intr(struct cpu_state cpu)
 
 		disable_irqs();
 		while (1)
-			relax();
+			cpu_relax();
 	}
 	/* IRQ */
 	else if (cpu.intr < 0x30)

@@ -1,8 +1,9 @@
-#include "asm.h"
 #include "console.h"
 #include "gdt.h"
 #include "idt.h"
+#include "io.h"
 #include "pic.h"
+#include "system.h"
 
 void init()
 {
@@ -51,5 +52,5 @@ void init()
 	asm volatile("sti");
 
 	while (1)
-		relax();
+		cpu_relax();
 }

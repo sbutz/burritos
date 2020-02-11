@@ -1,15 +1,5 @@
 .section .text
 
-.globl relax
-relax:
-	hlt
-	ret
-
-.globl disable_irqs
-disable_irqs:
-	cli
-	ret
-
 .globl inb
 inb:
 	mov 4(%esp), %dx
