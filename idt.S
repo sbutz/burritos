@@ -24,7 +24,7 @@ idt_load:
 		jmp common_intr_handler
 .endm
 
-.extern intr_handler
+.extern handle_intr
 common_intr_handler:
 	push %eax
 	push %ebx
@@ -35,7 +35,7 @@ common_intr_handler:
 	push %ebp
 	# ESP wird bereits von der Instruktion INT gesichert
 
-	call intr_handler
+	call handle_intr
 
 	pop %ebp
 	pop %edi

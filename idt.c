@@ -151,7 +151,7 @@ static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
 	idt[n].offset_higher = offset >> 16;
 }
 
-void intr_handler(struct cpu_state cpu)
+void handle_intr(struct cpu_state cpu)
 {
 	#if 0
 	kprintf("EAX %x\n", stack.eax);
