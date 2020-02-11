@@ -3,6 +3,7 @@
 #include "idt.h"
 #include "io.h"
 #include "pic.h"
+#include "serial.h"
 #include "system.h"
 
 void init()
@@ -20,36 +21,12 @@ void init()
 	pic_init();
 	pic_mask_irq(IRQ_TIMER);
 
-	uint16_t PORT = *((uint16_t *) 0x400);
-	kprintf("X: %x\n", PORT);
+	kprintf("[*] Init Serial Port\n");
+	serial_init();
 
-	uint16_t EQUIPMENT_WORD = *((uint16_t *) 0x410);
-	kprintf("X: %x\n", EQUIPMENT_WORD & 0xe00);
+	serial_puts("Booting...");
 
-	#define TB 0
-	#define IER 1
-	#define LCR 3
-	#define LSR 5
-
-	outb(0x3FB, 0x83); /* DLAB = 1 */
-	outb(0x3F8, 0x0C); /* 9600 Baud */
-	outb(0x3F9, 0x00);
-	outb(0x3FB, 0x03); /* DLAB = 0 */
-	outb(0x3F9, 0x00); /* keine Interrupts auslösen */
-	outb(0x3FA, 0x00); /* FIFOs deaktiviert (8250, 16450) */
-	outb(0x3FC, 0x00); /* Loopback deaktivieren, Aux1 & Aux2 deaktivieren */
-
-
-	while ((inb(PORT+LSR) & 0x20) == 0);
-	outb(PORT, 'H');
-	outb(PORT, 'E');
-	outb(PORT, 'L');
-	outb(PORT, 'L');
-	outb(PORT, 'O');
-	kprintf("INB: %x\n", inb(PORT+LSR));
-
-	/* Hardware-Interrupts aktivieren */
-	asm volatile("sti");
+	enable_irqs();
 
 	while (1)
 		cpu_relax();
