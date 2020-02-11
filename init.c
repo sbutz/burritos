@@ -2,6 +2,7 @@
 #include "console.h"
 #include "gdt.h"
 #include "idt.h"
+#include "pic.h"
 
 void init()
 {
@@ -14,6 +15,9 @@ void init()
 	kprintf("[*] Init Interrupt Descriptor Table\n");
 	idt_init();
 
+	kprintf("[*] Init Programmable Interrupt Controller\n");
+	pic_init();
+	pic_mask_irq(IRQ_TIMER);
 
 	uint16_t PORT = *((uint16_t *) 0x400);
 	kprintf("X: %x\n", PORT);
@@ -45,4 +49,7 @@ void init()
 
 	/* Hardware-Interrupts aktivieren */
 	asm volatile("sti");
+
+	while (1)
+		relax();
 }

@@ -3,6 +3,7 @@
 #include "asm.h"
 #include "console.h"
 #include "idt.h"
+#include "pic.h"
 
 extern void idt_load();
 
@@ -51,13 +52,9 @@ extern void intr_stub_48();
 
 static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
 	uint8_t flags);
-static void pic_init();
-
 
 void idt_init()
 {
-	pic_init();
-
 	idtp.limit = sizeof(struct idt_entry) * IDT_ENTRIES - 1;
 	idtp.pointer = idt;
 
@@ -154,40 +151,6 @@ static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
 	idt[n].offset_higher = offset >> 16;
 }
 
-static void pic_init()
-{
-	/*
-	 * PIC ist der Programmable Interrupt Controller.
-	 * Der PIC besteht aus Master PIC und Slave PIC mit je 8 Kanaelen.
-	 * Der Slave wird am IRQ2 des Master angeschlossen.
-	 *
-	 * Auf den ersten Interuptnummer liegen Exceptions und Hardware-Interrupts.
-	 * Zur Unterscheidung werden die Hardware-Interrupts verschoben. Exceptions
-	 * koennen nicht verschoben werden. Verschiebe Hardware-Interrupts auf 0x20.
-	 *
-	 * Vorgehensweise:
-	 * 1. Schicke Init-Befehl an Befehlsport (0x20 bzw. 0xa0)
-	 * 2. Schicke Interrupt-Nummer fuer IRQ bzw IRQ8
-	 * 3. Schicke fuer Master 0x04, fuer Slave den IRQ an welchem er am Master
-	 * angeschlossen ist.
-	 * 4. Schicke Flags (0x01).
-	 */
-	outb(0x20, 0x11);
-	outb(0xa0, 0x11);
-
-	outb(0x21, 0x20);
-	outb(0xa1, 0x28);
-
-	outb(0x21, 0x04);
-	outb(0xa1, 0x02);
-
-	outb(0x21, 0x01);
-	outb(0xa1, 0x01);
-
-	outb(0x21, 0x0);
-	outb(0xa1, 0x0);
-}
-
 void intr_handler(struct cpu_state cpu)
 {
 	#if 0
@@ -217,11 +180,12 @@ void intr_handler(struct cpu_state cpu)
 	/* IRQ */
 	else if (cpu.intr < 0x30)
 	{
+		pic_mask_irq(cpu.intr - IRQ_OFFSET);
 		kprintf("IRQ %x\n", cpu.intr);
 
-		if (cpu.intr > 0x27)
-			outb(0xa0, 0x20);
-		outb(0x20, 0x20);
+		pic_send_eoi(cpu.intr - IRQ_OFFSET);
+
+		pic_unmask_irq(cpu.intr - IRQ_OFFSET);
 	}
 	/* Syscalls */
 	else
