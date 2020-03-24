@@ -2,11 +2,10 @@ CC = cc
 LD = ld
 
 ASFLAGS = -m32
-CFLAGS = -m32 -Wall -g -fno-stack-protector -nostdinc
+CFLAGS = -m32 -Wall -g -fno-stack-protector -ffreestanding
 LDFLAGS = -n -melf_i386 -Tkernel.ld
 
 
-LIBS = -I $(CURDIR)/libc
 C_SRCS = $(shell find -name '*.[c]')
 OBJS = $(addsuffix .o,$(basename $(C_SRCS)))
 AS_SRCS = $(shell find -name '*.[S]')
