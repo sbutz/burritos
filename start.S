@@ -13,7 +13,7 @@
 
 .section .text
 
-.extern init
+.extern main
 
 .global _start
 _start:
@@ -21,7 +21,7 @@ _start:
 	mov $kernel_stack, %esp
 
 	// C Main Methode
-	call init
+	call main
 
 	// Nichts mehr zu tun, also Interrupts unterbinden und CPU anhalten
 	cli

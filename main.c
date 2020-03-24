@@ -5,7 +5,7 @@
 #include "serial.h"
 #include "system.h"
 
-void init()
+void main()
 {
 	console_init();
 	kprintf("sButz OS v1.0\n\n");
