@@ -18,7 +18,8 @@ void serial_init()
 void serial_putc(char c)
 {
 	while ((inb(PORT+LSR) & 0x20) == 0);
-		outb(PORT, c);
+
+	outb(PORT, c);
 }
 
 void serial_puts(char *s)
@@ -30,4 +31,9 @@ void serial_puts(char *s)
 	}
 }
 
-char serial_getc();
+char serial_getc()
+{
+	while ((inb(PORT+LSR) & 1) == 0);
+
+	return inb(PORT);
+}
