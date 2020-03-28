@@ -2,6 +2,7 @@
 #include "gdt.h"
 #include "idt.h"
 #include "pic.h"
+#include "pit_825x.h"
 #include "serial.h"
 #include "system.h"
 
@@ -19,6 +20,9 @@ void main()
 	kprintf("[*] Init Programmable Interrupt Controller\n");
 	pic_init();
 	pic_mask_irq(IRQ_TIMER);
+
+	kprintf("[*] Init Programmable Interval Timer\n");
+	pit_init(100);
 
 	kprintf("[*] Init Serial Port\n");
 	serial_init();
