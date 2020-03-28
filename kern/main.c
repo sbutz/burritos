@@ -1,7 +1,7 @@
 #include "console.h"
 #include "gdt.h"
 #include "idt.h"
-#include "pic.h"
+#include "pic_8259.h"
 #include "pit_825x.h"
 #include "serial.h"
 #include "system.h"

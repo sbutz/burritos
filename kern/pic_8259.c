@@ -1,5 +1,5 @@
 #include "io.h"
-#include "pic.h"
+#include "pic_8259.h"
 
 /*
  * PIC ist der Programmable Interrupt Controller.

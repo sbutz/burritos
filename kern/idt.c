@@ -2,7 +2,7 @@
 
 #include "console.h"
 #include "idt.h"
-#include "pic.h"
+#include "pic_8259.h"
 #include "system.h"
 
 extern void idt_load();
