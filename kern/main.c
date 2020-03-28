@@ -3,7 +3,7 @@
 #include "idt.h"
 #include "pic_8259.h"
 #include "pit_825x.h"
-#include "serial.h"
+#include "uart_8250.h"
 #include "system.h"
 
 void main()

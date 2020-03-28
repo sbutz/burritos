@@ -1,5 +1,5 @@
 #include "io.h"
-#include "serial.h"
+#include "uart_8250.h"
 
 uint16_t PORT;
 
