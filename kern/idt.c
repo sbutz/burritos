@@ -152,12 +152,8 @@ static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
 	idt[n].offset_higher = offset >> 16;
 }
 
-void handle_intr(struct cpu_state *cpu)
+struct cpu_state *handle_intr(struct cpu_state *cpu)
 {
-	#if 0
-	cpu_state_dump(cpu);
-	#endif
-
 	/* Exception */
 	if (cpu->intr < 0x20)
 	{
@@ -184,6 +180,8 @@ void handle_intr(struct cpu_state *cpu)
 	{
 		kprintf("Interrupt %x\n", cpu->intr);
 	}
+
+	return cpu;
 }
 
 void cpu_state_dump(struct cpu_state *cpu)

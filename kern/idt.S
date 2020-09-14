@@ -38,7 +38,7 @@ common_intr_handler:
 	push %esp
 	call handle_intr
 	# Pop pointer
-	add $4, %esp
+	mov %eax, %esp
 
 	# Restore registers
 	pop %eax

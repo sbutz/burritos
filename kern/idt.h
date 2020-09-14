@@ -50,7 +50,7 @@ struct cpu_state {
 } __attribute__((packed));
 
 void idt_init();
-void handle_intr(struct cpu_state *cpu);
+struct cpu_state *handle_intr(struct cpu_state *cpu);
 
 struct idt_entry idt[IDT_ENTRIES];
 struct idt_description idtp;
