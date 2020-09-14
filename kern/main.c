@@ -29,6 +29,7 @@ void main()
 
 	serial_puts("Booting...");
 
+	pic_unmask_irq(IRQ_TIMER);
 	enable_irqs();
 
 	while (1)

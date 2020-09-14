@@ -26,24 +26,28 @@ idt_load:
 
 .extern handle_intr
 common_intr_handler:
-	push %eax
-	push %ebx
-	push %ecx
-	push %edx
-	push %esi
-	push %edi
 	push %ebp
-	# ESP wird bereits von der Instruktion INT gesichert
+	push %edi
+	push %esi
+	push %edx
+	push %ecx
+	push %ebx
+	push %eax
 
+	# Passing pointer to cpu state to interrupt handler
+	push %esp
 	call handle_intr
+	# Pop pointer
+	add $4, %esp
 
-	pop %ebp
-	pop %edi
-	pop %esi
-	pop %edx
-	pop %ecx
-	pop %ebx
+	# Restore registers
 	pop %eax
+	pop %ebx
+	pop %ecx
+	pop %edx
+	pop %esi
+	pop %edi
+	pop %ebp
 
 	# Interrupt Nummer und Error Code loeschen
 	add $8, %esp

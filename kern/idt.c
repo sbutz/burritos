@@ -52,6 +52,7 @@ extern void intr_stub_48();
 
 static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
 	uint8_t flags);
+static void cpu_state_dump(struct cpu_state *cpu);
 
 void idt_init()
 {
@@ -151,45 +152,52 @@ static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
 	idt[n].offset_higher = offset >> 16;
 }
 
-void handle_intr(struct cpu_state cpu)
+void handle_intr(struct cpu_state *cpu)
 {
 	#if 0
-	kprintf("EAX %x\n", stack.eax);
-	kprintf("EBX %x\n", stack.ebx);
-	kprintf("ECX %x\n", stack.ecx);
-	kprintf("EDX %x\n", stack.edx);
-	kprintf("ESI %x\n", stack.esi);
-	kprintf("EDI %x\n", stack.edi);
-	kprintf("EBP %x\n", stack.ebp);
-	kprintf("Instruction Pointer %x\n", stack.eip);
-	kprintf("Code Segment %x\n", stack.cs);
-	kprintf("Flags %x\n", stack.eflags);
-	kprintf("Stack Pointer %x\n", stack.esp);
-	kprintf("Stack Segment %x\n", stack.ss);
+	cpu_state_dump(cpu);
 	#endif
 
 	/* Exception */
-	if (cpu.intr < 0x20)
+	if (cpu->intr < 0x20)
 	{
-		kprintf("Exception %x, halt Kernel\n", cpu.error_code);
+		kprintf("Exception %x, Error %x, halt Kernel\n", cpu->intr,
+			cpu->error_code);
 
 		disable_irqs();
 		while (1)
 			cpu_relax();
 	}
 	/* IRQ */
-	else if (cpu.intr < 0x30)
+	else if (cpu->intr < 0x30)
 	{
-		pic_mask_irq(cpu.intr - IRQ_OFFSET);
-		kprintf("IRQ %x\n", cpu.intr);
+		pic_mask_irq(cpu->intr - IRQ_OFFSET);
 
-		pic_send_eoi(cpu.intr - IRQ_OFFSET);
+		kprintf("IRQ %x\n", cpu->intr);
 
-		pic_unmask_irq(cpu.intr - IRQ_OFFSET);
+		pic_send_eoi(cpu->intr - IRQ_OFFSET);
+
+		pic_unmask_irq(cpu->intr - IRQ_OFFSET);
 	}
 	/* Syscalls */
 	else
 	{
-		kprintf("Interrupt %x\n", cpu.intr);
+		kprintf("Interrupt %x\n", cpu->intr);
 	}
+}
+
+void cpu_state_dump(struct cpu_state *cpu)
+{
+	kprintf("EAX %x\n", cpu->eax);
+	kprintf("EBX %x\n", cpu->ebx);
+	kprintf("ECX %x\n", cpu->ecx);
+	kprintf("EDX %x\n", cpu->edx);
+	kprintf("ESI %x\n", cpu->esi);
+	kprintf("EDI %x\n", cpu->edi);
+	kprintf("EBP %x\n", cpu->ebp);
+	kprintf("Instruction Pointer %x\n", cpu->eip);
+	kprintf("Code Segment %x\n", cpu->cs);
+	kprintf("Flags %x\n", cpu->eflags);
+	kprintf("Stack Pointer %x\n", cpu->esp);
+	kprintf("Stack Segment %x\n", cpu->ss);
 }
