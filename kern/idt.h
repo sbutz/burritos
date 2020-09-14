@@ -51,6 +51,7 @@ struct cpu_state {
 
 void idt_init();
 struct cpu_state *handle_intr(struct cpu_state *cpu);
+void cpu_state_dump(struct cpu_state *cpu);
 
 struct idt_entry idt[IDT_ENTRIES];
 struct idt_description idtp;

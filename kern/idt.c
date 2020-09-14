@@ -52,7 +52,6 @@ extern void intr_stub_48();
 
 static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
 	uint8_t flags);
-static void cpu_state_dump(struct cpu_state *cpu);
 
 void idt_init()
 {
@@ -154,6 +153,8 @@ static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
 
 struct cpu_state *handle_intr(struct cpu_state *cpu)
 {
+	static int c = 0;
+
 	/* Exception */
 	if (cpu->intr < 0x20)
 	{
@@ -169,7 +170,16 @@ struct cpu_state *handle_intr(struct cpu_state *cpu)
 	{
 		pic_mask_irq(cpu->intr - IRQ_OFFSET);
 
-		kprintf("IRQ %x\n", cpu->intr);
+		if (cpu->intr == 0x20) {
+			c++;
+			if (c == 100) {
+				kprintf("IRQ %x [PIT]\n", cpu->intr);
+				c = 0;
+			}
+		} else {
+			kprintf("IRQ %x\n", cpu->intr);
+		}
+
 
 		pic_send_eoi(cpu->intr - IRQ_OFFSET);
 
