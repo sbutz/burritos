@@ -153,47 +153,55 @@ static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
 
 struct cpu_state *handle_intr(struct cpu_state *cpu)
 {
-	static int c = 0;
-
 	/* Exception */
 	if (cpu->intr < 0x20)
-	{
-		kprintf("Exception %x, Error %x, halt Kernel\n", cpu->intr,
-			cpu->error_code);
-
-		disable_irqs();
-		while (1)
-			cpu_relax();
-	}
+		handle_exception(cpu);
 	/* IRQ */
 	else if (cpu->intr < 0x30)
-	{
-		pic_mask_irq(cpu->intr - IRQ_OFFSET);
-
-		if (cpu->intr == 0x20) {
-			c++;
-			if (c == 100) {
-				kprintf("IRQ %x [PIT]\n", cpu->intr);
-				c = 0;
-			}
-		} else {
-			kprintf("IRQ %x\n", cpu->intr);
-		}
-
-
-		pic_send_eoi(cpu->intr - IRQ_OFFSET);
-
-		pic_unmask_irq(cpu->intr - IRQ_OFFSET);
-	}
+		handle_irq(cpu);
 	/* Syscalls */
 	else
-	{
-		kprintf("Interrupt %x\n", cpu->intr);
-	}
+		handle_syscall(cpu);
 
 	return cpu;
 }
 
+void handle_exception(struct cpu_state *cpu)
+{
+	kprintf("Exception %x, Error %x, halting Kernel\n", cpu->intr,
+		cpu->error_code);
+
+	disable_irqs();
+	while (1)
+		cpu_relax();
+}
+
+void handle_irq(struct cpu_state *cpu)
+{
+	static int c = 0;
+
+	pic_mask_irq(cpu->intr - IRQ_OFFSET);
+
+	switch (cpu->intr) {
+	case 0x20:
+		if (++c == 100) {
+			kprintf("IRQ %x [PIT]\n", cpu->intr);
+			c = 0;
+		}
+		break;
+	default:
+		kprintf("IRQ %x\n", cpu->intr);
+		break;
+	}
+
+	pic_send_eoi(cpu->intr - IRQ_OFFSET);
+	pic_unmask_irq(cpu->intr - IRQ_OFFSET);
+}
+
+void handle_syscall(struct cpu_state *cpu)
+{
+	kprintf("Interrupt %x\n", cpu->intr);
+}
 void cpu_state_dump(struct cpu_state *cpu)
 {
 	kprintf("EAX %x\n", cpu->eax);
