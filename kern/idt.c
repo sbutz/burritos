@@ -52,6 +52,9 @@ extern void intr_stub_48();
 
 static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
 	uint8_t flags);
+static void handle_exception(struct cpu_state *cpu);
+static struct cpu_state *handle_irq(struct cpu_state *cpu);
+static void handle_syscall(struct cpu_state *cpu);
 
 void idt_init()
 {
@@ -176,14 +179,16 @@ void handle_exception(struct cpu_state *cpu)
 		cpu_relax();
 }
 
-void handle_irq(struct cpu_state *cpu)
+struct cpu_state *handle_irq(struct cpu_state *cpu)
 {
 	static int c = 0;
+	struct cpu_state *ret;
 
 	pic_mask_irq(cpu->intr - IRQ_OFFSET);
 
 	switch (cpu->intr) {
 	case 0x20:
+		ret = schedule(cpu);
 		if (++c == 100) {
 			kprintf("IRQ %x [PIT]\n", cpu->intr);
 			c = 0;
@@ -191,11 +196,14 @@ void handle_irq(struct cpu_state *cpu)
 		break;
 	default:
 		kprintf("IRQ %x\n", cpu->intr);
+		ret = cpu;
 		break;
 	}
 
 	pic_send_eoi(cpu->intr - IRQ_OFFSET);
 	pic_unmask_irq(cpu->intr - IRQ_OFFSET);
+
+	return ret;
 }
 
 void handle_syscall(struct cpu_state *cpu)
