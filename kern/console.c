@@ -6,7 +6,7 @@
 static char HEX[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
 	'b', 'c', 'd', 'e', 'f' };
 
-static void _printc(char c);
+static int _printc(char c);
 static int _printp(void *ptr);
 static int _printh(unsigned int num);
 
@@ -24,12 +24,15 @@ int kprintf(const char *fmt, ...)
 	for (i = 0, total = 0; fmt[i] != '\0'; i++) {
 		if (i > 0 && fmt[i - 1] == '%') {
 			switch(fmt[i]) {
-				case 'p':
-					total += _printp(va_arg(args, void *));
-					break;
-				case 'x':
-					total += _printh(va_arg(args, unsigned int));
-					break;
+			case 'c':
+				total += _printc(va_arg(args, int));
+				break;
+			case 'p':
+				total += _printp(va_arg(args, void *));
+				break;
+			case 'x':
+				total += _printh(va_arg(args, unsigned int));
+				break;
 			}
 		} else {
 			_printc(fmt[i]);
@@ -41,9 +44,10 @@ int kprintf(const char *fmt, ...)
 	return total;
 }
 
-static void _printc(char c)
+static int _printc(char c)
 {
 	fb_putc(c);
+	return 1;
 }
 
 static int _printp(void *ptr)
@@ -61,8 +65,7 @@ static int _printh(unsigned int num)
 
 	for (i = 0; i < 32; i += 4) {
 		digit = (num << i) >> 28;
-		_printc(HEX[digit]);
-		total++;
+		total += _printc(HEX[digit]);
 	}
 
 	return total;
