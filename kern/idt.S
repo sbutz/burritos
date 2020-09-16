@@ -20,7 +20,7 @@ idt_load:
 	.globl intr_stub_\num
 	intr_stub_\num:
 		# Interrupt Nummer
-		push $0x\num
+		push $\num
 		jmp common_intr_handler
 .endm
 
