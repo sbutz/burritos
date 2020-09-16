@@ -27,6 +27,9 @@ void main()
 	kprintf("[*] Init Serial Port\n");
 	serial_init();
 
+	kprintf("[*] Init Scheduler\n");
+	schedule_init();
+
 	serial_puts("Booting...");
 
 	pic_unmask_irq(IRQ_TIMER);

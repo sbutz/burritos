@@ -5,6 +5,7 @@
 #include "pic_8259.h"
 #include "system.h"
 #include "uart_8250.h"
+#include "schedule.h"
 
 extern void idt_load();
 
@@ -162,7 +163,7 @@ struct cpu_state *handle_intr(struct cpu_state *cpu)
 		handle_exception(cpu);
 	/* IRQ */
 	else if (cpu->intr < 0x30)
-		handle_irq(cpu);
+		return handle_irq(cpu);
 	/* Syscalls */
 	else
 		handle_syscall(cpu);
@@ -182,25 +183,19 @@ void handle_exception(struct cpu_state *cpu)
 
 struct cpu_state *handle_irq(struct cpu_state *cpu)
 {
-	static int c = 0;
-	struct cpu_state *ret;
+	struct cpu_state *ret = cpu;
 
 	pic_mask_irq(cpu->intr - IRQ_OFFSET);
 
 	switch (cpu->intr - IRQ_OFFSET) {
 	case 0x0:
 		ret = schedule(cpu);
-		if (++c == 100) {
-			kprintf("IRQ %x [PIT]\n", cpu->intr);
-			c = 0;
-		}
 		break;
 	case 0x4:
 		serial_putc(serial_getc());
 		break;
 	default:
 		kprintf("IRQ %x\n", cpu->intr);
-		ret = cpu;
 		break;
 	}
 
@@ -214,6 +209,7 @@ void handle_syscall(struct cpu_state *cpu)
 {
 	kprintf("Interrupt %x\n", cpu->intr);
 }
+
 void cpu_state_dump(struct cpu_state *cpu)
 {
 	kprintf("EAX %x\n", cpu->eax);
