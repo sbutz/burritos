@@ -10,7 +10,7 @@
 ### Working
 - VGA output
 - Interrupts
-- Serial charwise in/out
+- Charwise serial i/o
 - Task switching (only Ring 0)
 
 ## TODO
