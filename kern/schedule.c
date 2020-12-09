@@ -82,7 +82,8 @@ static void task_b()
 }
 
 // Disable interrrupts to prevent task switch
-static void malicous_task_disable_inter() {
+static void malicous_task_disable_inter()
+{
 	asm("cli");
 	while (1)
 		kprintf("It's just Rick and Morty\n");
@@ -90,7 +91,8 @@ static void malicous_task_disable_inter() {
 
 // Overwrite foreign cpu_state block
 // TODO: just overwrite forgein saved programm counter
-static void malicous_task_write() {
+static void malicous_task_write()
+{
 	uint8_t s;
 	uint8_t *p;
 	int i;
@@ -101,7 +103,6 @@ static void malicous_task_write() {
 		*p = 0x0;
 	}
 
-	while (1) {
+	while (1)
 		kprintf("A hundred years Rick and Morty\n");
-	}
 }
