@@ -20,7 +20,7 @@ static uint8_t stack_b[STACK_SIZE];
 void schedule_init()
 {
 	task[0] = task_init(task_a, stack_a);
-	task[1] = task_init(malicous_task_write, stack_b);
+	task[1] = task_init(task_b, stack_b);
 	num_tasks = 2;
 	current_task = -1;
 }
@@ -71,14 +71,32 @@ struct cpu_state *schedule(struct cpu_state *cpu)
 
 static void task_a()
 {
+	int i;
+
 	while (1)
-		kprintf("A\n");
+	{
+		i++;
+		if (i == 0x0fffffff)
+		{
+			kprintf("A\n");
+			i = 0;
+		}
+	}
 }
 
 static void task_b()
 {
+	int i;
+
 	while (1)
-		kprintf("B\n");
+	{
+		i++;
+		if (i == 0x0fffffff)
+		{
+			kprintf("B\n");
+			i = 0;
+		}
+	}
 }
 
 // Disable interrrupts to prevent task switch
