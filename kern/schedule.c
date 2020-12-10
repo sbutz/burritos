@@ -17,7 +17,8 @@ static int current_task;
 static uint8_t stack_a[STACK_SIZE];
 static uint8_t stack_b[STACK_SIZE];
 
-void schedule_init()
+void
+schedule_init()
 {
 	task[0] = task_init(task_a, stack_a);
 	task[1] = task_init(task_b, stack_b);
@@ -25,7 +26,8 @@ void schedule_init()
 	current_task = -1;
 }
 
-static struct cpu_state *task_init(void *fn, uint8_t *stack)
+static struct cpu_state
+*task_init(void *fn, uint8_t *stack)
 {
 	struct cpu_state state = {
 		.eax = 0,
@@ -58,7 +60,8 @@ static struct cpu_state *task_init(void *fn, uint8_t *stack)
 	return task;
 }
 
-struct cpu_state *schedule(struct cpu_state *cpu)
+struct cpu_state *
+schedule(struct cpu_state *cpu)
 {
 	// Alten Cpu Stand sichern
 	if (current_task >= 0)
@@ -69,7 +72,8 @@ struct cpu_state *schedule(struct cpu_state *cpu)
 	return task[current_task];
 }
 
-static void task_a()
+static void
+task_a()
 {
 	int i;
 
@@ -84,7 +88,8 @@ static void task_a()
 	}
 }
 
-static void task_b()
+static void
+task_b()
 {
 	int i;
 
@@ -100,7 +105,8 @@ static void task_b()
 }
 
 // Disable interrrupts to prevent task switch
-static void malicous_task_disable_inter()
+static void
+malicous_task_disable_inter()
 {
 	asm("cli");
 	while (1)
@@ -109,7 +115,8 @@ static void malicous_task_disable_inter()
 
 // Overwrite foreign cpu_state block
 // TODO: just overwrite forgein saved programm counter
-static void malicous_task_write()
+static void
+malicous_task_write()
 {
 	uint8_t s;
 	uint8_t *p;

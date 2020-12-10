@@ -3,18 +3,7 @@
 #include "gdt.h"
 
 extern void gdt_load();
-
-static void gdt_set_entry(unsigned int n, uint32_t base, uint32_t limit,
-	uint8_t access, uint8_t flags)
-{
-
-	gdt[n].limit_lower = limit & 0xffff;
-	gdt[n].base_lower = base & 0xffff;
-	gdt[n].base_middle = (base >> 16) & 0xff;
-	gdt[n].access = access;
-	gdt[n].flags_limit_higher = (flags << 4) | ((limit >> 16) & 0xf);
-	gdt[n].base_higher = base >> 24;
-}
+static void gdt_set_entry(unsigned int, uint32_t, uint32_t, uint8_t, uint8_t);
 
 void gdt_init()
 {
@@ -33,4 +22,17 @@ void gdt_init()
 		GDT_FLAG_4K_GRAN);
 	
 	gdt_load();
+}
+
+static void
+gdt_set_entry(unsigned int n, uint32_t base, uint32_t limit, uint8_t access,
+	uint8_t flags)
+{
+
+	gdt[n].limit_lower = limit & 0xffff;
+	gdt[n].base_lower = base & 0xffff;
+	gdt[n].base_middle = (base >> 16) & 0xff;
+	gdt[n].access = access;
+	gdt[n].flags_limit_higher = (flags << 4) | ((limit >> 16) & 0xf);
+	gdt[n].base_higher = base >> 24;
 }
