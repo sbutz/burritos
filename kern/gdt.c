@@ -12,12 +12,24 @@ void gdt_init()
 
 	/* Nulldeskriptor */
 	gdt_set_entry(0, 0, 0, 0, 0);
+
 	/* Codesegment Kernel */
 	gdt_set_entry(1, 0, 0xfffff, GDT_ACCESS_PRESENT | GDT_ACCESS_RING0 |
 		GDT_ACCESS_SEGMENT | GDT_ACCESS_CODESEG, GDT_FLAG_32_BIT |
 		GDT_FLAG_4K_GRAN);
+
 	/* Datasegment Kernel */
 	gdt_set_entry(2, 0, 0xfffff, GDT_ACCESS_PRESENT | GDT_ACCESS_RING0 |
+		GDT_ACCESS_SEGMENT | GDT_ACCESS_DATASEG, GDT_FLAG_32_BIT |
+		GDT_FLAG_4K_GRAN);
+
+	/* Codesegment Userspace */
+	gdt_set_entry(3, 0, 0xfffff, GDT_ACCESS_PRESENT | GDT_ACCESS_RING3 |
+		GDT_ACCESS_SEGMENT | GDT_ACCESS_CODESEG, GDT_FLAG_32_BIT |
+		GDT_FLAG_4K_GRAN);
+
+	/* Datasegment Userspace  */
+	gdt_set_entry(4, 0, 0xfffff, GDT_ACCESS_PRESENT | GDT_ACCESS_RING3 |
 		GDT_ACCESS_SEGMENT | GDT_ACCESS_DATASEG, GDT_FLAG_32_BIT |
 		GDT_FLAG_4K_GRAN);
 	
