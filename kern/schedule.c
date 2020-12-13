@@ -1,5 +1,6 @@
-#include "schedule.h"
 #include "console.h"
+#include "gdt.h"
+#include "schedule.h"
 
 #define STACK_SIZE 4096
 #define MAX_TASKS 2
@@ -42,13 +43,14 @@ static struct cpu_state
 		//.error_code = 0,
 
 		.eip = (uint32_t) fn,
-		.cs = 0x08, /* Ring 0 */
+		//.esp = ungenutzt
 
 		.eflags =  0x202, /* Interrupts eingeschaltet: IF = 1 */
 		// IF = 1 => 0x200, Reserved bit 0x002 is always 1
 
-		//.ss = ungenutzt
-		//.esp = ungenutzt
+		// Offset in GDT
+		.cs = 1 * sizeof(struct gdt_entry), /* Ring 0 */
+		.ss = 2 * sizeof(struct gdt_entry), /* Ring 0 */
 	};
 
 
@@ -105,6 +107,7 @@ task_b()
 }
 
 // Disable interrrupts to prevent task switch
+// Should not work after implementing userspace
 static void
 malicous_task_disable_inter()
 {
@@ -115,6 +118,7 @@ malicous_task_disable_inter()
 
 // Overwrite foreign cpu_state block
 // TODO: just overwrite forgein saved programm counter
+// Should not work after implementing memory virtualisation
 static void
 malicous_task_write()
 {
