@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define GDT_ENTRIES 3
+#define GDT_ENTRIES 5
 
 #define GDT_ACCESS_PRESENT 0x80
 #define GDT_ACCESS_RING0 0x00
