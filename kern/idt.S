@@ -34,11 +34,21 @@ common_intr_handler:
 	push %ebx
 	push %eax
 
+	# Kernel Datasegment (GDT Offset)
+	mov $0x10, %ax
+	mov %ax, %ds
+	mov %ax, %es
+
 	# Passing pointer to cpu state to interrupt handler
 	push %esp
 	call handle_intr
 	# Pop pointer
 	mov %eax, %esp
+
+	# Kernel Datasegment (GDT Offset)
+	mov $0x10, %ax
+	mov %ax, %ds
+	mov %ax, %es
 
 	# Restore registers
 	pop %eax
