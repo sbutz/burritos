@@ -5,7 +5,7 @@
 #define STACK_SIZE 4096
 #define MAX_TASKS 2
 
-static struct cpu_state *task_init(void *fn, uint8_t *stack);
+static struct cpu_state *task_init(void *, uint8_t *, uint8_t *);
 static void task_a();
 static void task_b();
 static void malicous_task_disable_inter();
@@ -16,19 +16,21 @@ static int num_tasks;
 static int current_task;
 
 static uint8_t stack_a[STACK_SIZE];
+static uint8_t user_stack_a[STACK_SIZE];
 static uint8_t stack_b[STACK_SIZE];
+static uint8_t user_stack_b[STACK_SIZE];
 
 void
 schedule_init()
 {
-	task[0] = task_init(task_a, stack_a);
-	task[1] = task_init(task_b, stack_b);
+	task[0] = task_init(task_a, stack_a, user_stack_a);
+	task[1] = task_init(task_b, stack_b, user_stack_b);
 	num_tasks = 2;
 	current_task = -1;
 }
 
 static struct cpu_state
-*task_init(void *fn, uint8_t *stack)
+*task_init(void *fn, uint8_t *stack, uint8_t *user_stack)
 {
 	struct cpu_state state = {
 		.eax = 0,
@@ -43,7 +45,7 @@ static struct cpu_state
 		//.error_code = 0,
 
 		.eip = (uint32_t) fn,
-		//.esp = ungenutzt
+		//.esp = (uint32_t) user_stack + STACK_SIZE,
 
 		.eflags =  0x202, /* Interrupts eingeschaltet: IF = 1 */
 		// IF = 1 => 0x200, Reserved bit 0x002 is always 1
