@@ -3,7 +3,12 @@
 #include "gdt.h"
 
 extern void gdt_load();
+extern void tss_load();
+
 static void gdt_set_entry(unsigned int, uint32_t, uint32_t, uint8_t, uint8_t);
+
+static uint32_t tss[26] = {0};
+
 
 void gdt_init()
 {
@@ -32,9 +37,26 @@ void gdt_init()
 	gdt_set_entry(4, 0, 0xfffff, GDT_ACCESS_PRESENT | GDT_ACCESS_RING3 |
 		GDT_ACCESS_SEGMENT | GDT_ACCESS_DATASEG, GDT_FLAG_32_BIT |
 		GDT_FLAG_4K_GRAN);
+
+	/* Task State Segment Multitasking */
+	gdt_set_entry(5, (uint32_t) &tss, sizeof(tss), GDT_ACCESS_TTSSEG |
+		GDT_ACCESS_PRESENT | GDT_ACCESS_RING3, 0);
+
+	/* Task State Segment Double Fault */
+	//TODO: implement
 	
 	gdt_load();
+
+	tss[2] = 2 * sizeof(struct gdt_entry); //Index of Kernel Data Segment
+	tss_load();
 }
+
+void
+tss_set_kernel_stack(uint32_t esp)
+{
+	tss[1] = esp;
+}
+
 
 static void
 gdt_set_entry(unsigned int n, uint32_t base, uint32_t limit, uint8_t access,

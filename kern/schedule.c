@@ -45,14 +45,14 @@ static struct cpu_state
 		//.error_code = 0,
 
 		.eip = (uint32_t) fn,
-		//.esp = (uint32_t) user_stack + STACK_SIZE,
+		.esp = (uint32_t) user_stack + STACK_SIZE,
 
 		.eflags =  0x202, /* Interrupts eingeschaltet: IF = 1 */
 		// IF = 1 => 0x200, Reserved bit 0x002 is always 1
 
 		// Offset in GDT
-		.cs = 1 * sizeof(struct gdt_entry), /* Ring 0 */
-		.ss = 2 * sizeof(struct gdt_entry), /* Ring 0 */
+		.cs = 0x18 | 0x03, /* Ring 3 */
+		.ss = 0x20 | 0x03, /* Ring 3 */
 	};
 
 

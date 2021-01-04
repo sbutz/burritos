@@ -11,3 +11,9 @@ gdt_load:
 	mov %ax, %gs
 	mov %ax, %ss
 	ret
+
+.globl tss_load
+tss_load:
+	mov $0x2b, %ax # Segment Selector
+	ltr %ax
+	ret

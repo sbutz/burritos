@@ -1,6 +1,7 @@
 #include <stdint.h>
 
 #include "console.h"
+#include "gdt.h"
 #include "idt.h"
 #include "pic_8259.h"
 #include "system.h"
@@ -176,6 +177,9 @@ void handle_exception(struct cpu_state *cpu)
 	kprintf("Exception %x, Error %x, halting Kernel\n", cpu->intr,
 		cpu->error_code);
 
+
+	cpu_state_dump(cpu);
+
 	disable_irqs();
 	while (1)
 		cpu_relax();
@@ -190,6 +194,8 @@ struct cpu_state *handle_irq(struct cpu_state *cpu)
 	switch (cpu->intr - IRQ_OFFSET) {
 	case 0x0:
 		ret = schedule(cpu);
+		tss_set_kernel_stack((uint32_t) (ret + 1));
+		//tss_set_kernel_stack(ret->esp);
 		break;
 	case 0x4:
 		serial_putc(serial_getc());

@@ -38,6 +38,8 @@ common_intr_handler:
 	mov $0x10, %ax
 	mov %ax, %ds
 	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
 
 	# Passing pointer to cpu state to interrupt handler
 	push %esp
@@ -45,10 +47,12 @@ common_intr_handler:
 	# Pop pointer
 	mov %eax, %esp
 
-	# Kernel Datasegment (GDT Offset)
-	mov $0x10, %ax
+	# User Datasegment (GDT Offset)
+	mov $0x23, %ax
 	mov %ax, %ds
 	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
 
 	# Restore registers
 	pop %eax

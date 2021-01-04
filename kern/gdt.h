@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define GDT_ENTRIES 5
+#define GDT_ENTRIES 6
 
 #define GDT_ACCESS_PRESENT 0x80
 #define GDT_ACCESS_RING0 0x00
@@ -32,6 +32,7 @@ struct gdt_description {
 } __attribute__((packed));
 
 void gdt_init();
+void tss_set_kernel_stack(uint32_t);
 
 struct gdt_entry gdt[GDT_ENTRIES];
 struct gdt_description gdtp;
