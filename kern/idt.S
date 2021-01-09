@@ -38,8 +38,6 @@ common_intr_handler:
 	mov $0x10, %ax
 	mov %ax, %ds
 	mov %ax, %es
-	mov %ax, %fs
-	mov %ax, %gs
 
 	# Passing pointer to cpu state to interrupt handler
 	push %esp
@@ -51,8 +49,6 @@ common_intr_handler:
 	mov $0x23, %ax
 	mov %ax, %ds
 	mov %ax, %es
-	mov %ax, %fs
-	mov %ax, %gs
 
 	# Restore registers
 	pop %eax
@@ -64,7 +60,7 @@ common_intr_handler:
 	pop %ebp
 
 	# Interrupt Nummer und Error Code loeschen
-	add $8, %esp
+	add $0x8, %esp
 
 	iret
 
