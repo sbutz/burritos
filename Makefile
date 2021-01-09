@@ -26,8 +26,8 @@ run: iso
 		-m 32 \
 		-no-reboot \
 		-drive format=raw,media=cdrom,file=os.iso \
-		-serial stdio \
-		-vga std
+		-nographic \
+		-monitor telnet:127.0.0.1:55555,server,nowait
 
 .PHONY: clean
 clean:

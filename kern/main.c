@@ -9,7 +9,7 @@
 void main()
 {
 	console_init();
-	kprintf("sButz OS v1.0\n\n");
+	kprintf("\n\nsButz OS v1.0\n\n");
 
 	kprintf("[*] Init Global Descriptor Table\n");
 	gdt_init();
@@ -24,13 +24,8 @@ void main()
 	kprintf("[*] Init Programmable Interval Timer\n");
 	pit_init(100);
 
-	kprintf("[*] Init Serial Port\n");
-	serial_init();
-
 	kprintf("[*] Init Scheduler\n");
 	schedule_init();
-
-	serial_puts("Booting...");
 
 	pic_unmask_irq(IRQ_TIMER);
 	enable_irqs();

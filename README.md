@@ -15,3 +15,9 @@
 
 ## TODO
 Basic shell: read input, react to input
+
+## Debugging
+Qemu Monitor:
+```
+telnet localhost 55555
+```

@@ -1,7 +1,7 @@
 #include <stdarg.h>
 
 #include "console.h"
-#include "fb.h"
+#include "uart_8250.h"
 
 static char HEX[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
 	'b', 'c', 'd', 'e', 'f' };
@@ -12,7 +12,7 @@ static int _printh(unsigned int num);
 
 void console_init()
 {
-	fb_init();
+	serial_init();
 }
 
 int kprintf(const char *fmt, ...)
@@ -46,7 +46,7 @@ int kprintf(const char *fmt, ...)
 
 static int _printc(char c)
 {
-	fb_putc(c);
+	serial_putc(c);
 	return 1;
 }
 
