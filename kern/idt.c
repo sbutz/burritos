@@ -195,7 +195,6 @@ struct cpu_state *handle_irq(struct cpu_state *cpu)
 	case 0x0:
 		ret = schedule(cpu);
 		tss_set_kernel_stack((uint32_t) (ret + 1));
-		//tss_set_kernel_stack(ret->esp);
 		break;
 	case 0x4:
 		serial_putc(serial_getc());
@@ -218,6 +217,7 @@ void handle_syscall(struct cpu_state *cpu)
 
 void cpu_state_dump(struct cpu_state *cpu)
 {
+	kprintf("\n");
 	kprintf("EAX %x\n", cpu->eax);
 	kprintf("EBX %x\n", cpu->ebx);
 	kprintf("ECX %x\n", cpu->ecx);
@@ -230,4 +230,5 @@ void cpu_state_dump(struct cpu_state *cpu)
 	kprintf("Flags %x\n", cpu->eflags);
 	kprintf("Stack Pointer %x\n", cpu->esp);
 	kprintf("Stack Segment %x\n", cpu->ss);
+	kprintf("\n");
 }
