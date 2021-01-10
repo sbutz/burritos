@@ -141,7 +141,7 @@ void idt_init()
 
 	/* Syscalls */
 	idt_set_entry(48, (uintptr_t) &intr_stub_48, 0x8, IDT_FLAG_INTERRUPT_GATE |
-		IDT_FLAG_PRESENT | IDT_FLAG_RING0 | IDT_FLAG_32_BIT);
+		IDT_FLAG_PRESENT | IDT_FLAG_RING3 | IDT_FLAG_32_BIT);
 
 	idt_load();
 }
