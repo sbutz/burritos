@@ -1,5 +1,5 @@
-#ifndef GDT_H
-#define GDT_H
+#ifndef _GDT_H
+#define _GDT_H
 
 #include <stdint.h>
 
@@ -17,7 +17,8 @@
 #define GDT_FLAG_4K_GRAN 0x08
 #define GDT_FLAG_32_BIT 0x04
 
-struct gdt_entry {
+struct gdt_entry
+{
 	uint16_t limit_lower;
 	uint16_t base_lower;
 	uint8_t base_middle;
@@ -26,7 +27,8 @@ struct gdt_entry {
 	uint8_t base_higher;
 } __attribute__((packed));
 
-struct gdt_description {
+struct gdt_description
+{
 	uint16_t limit;
 	void *pointer;
 } __attribute__((packed));

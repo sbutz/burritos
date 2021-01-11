@@ -1,5 +1,5 @@
-#ifndef IDT_H
-#define IDT_H
+#ifndef _IDT_H
+#define _IDT_H
 
 #include <stdint.h>
 
@@ -13,7 +13,8 @@
 #define IDT_FLAG_RING3 0x60
 #define IDT_FLAG_PRESENT 0x80
 
-struct idt_entry {
+struct idt_entry
+{
 	uint16_t offset_lower;
 	uint16_t selector;
 	uint8_t unused;
@@ -21,12 +22,14 @@ struct idt_entry {
 	uint16_t offset_higher;
 } __attribute__((packed));
 
-struct idt_description {
+struct idt_description
+{
 	uint16_t limit;
 	void *pointer;
 } __attribute__((packed));
 
-struct cpu_state {
+struct cpu_state
+{
 	/* Pushed by common interrupt helper */
 	uint32_t eax;
 	uint32_t ebx;
@@ -50,11 +53,9 @@ struct cpu_state {
 } __attribute__((packed));
 
 void idt_init();
-struct cpu_state *handle_intr(struct cpu_state *cpu);
-void cpu_state_dump(struct cpu_state *cpu);
+struct cpu_state *handle_intr(struct cpu_state *);
 
 struct idt_entry idt[IDT_ENTRIES];
 struct idt_description idtp;
-
 
 #endif

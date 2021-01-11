@@ -3,10 +3,10 @@
 #include "idt.h"
 #include "pic_8259.h"
 #include "pit_825x.h"
-#include "uart_8250.h"
 #include "system.h"
 
-void main()
+void
+main()
 {
 	console_init();
 	kprintf("\n\nsButz OS v1.0\n\n");

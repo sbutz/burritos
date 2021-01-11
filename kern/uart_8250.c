@@ -3,28 +3,31 @@
 
 uint16_t PORT;
 
-void serial_init()
+void
+serial_init()
 {
+	/* Read Port from BIOS Data Area (BDA) */
 	PORT = *((uint16_t *) 0x400);
 
-	outb(PORT+LCR, 0x80); /* DLAB = 1 */
+	outb(PORT+LCR, 0x80);		/* DLAB = 1 */
 	outb(PORT, 115200 / BAUD);
-	outb(PORT+LCR, 0x0); /* DLAB = 0 */
-	//outb(PORT+IER, 0x0); /* Enable no Interrupts */
-	outb(PORT+IER, 0x1); /* Enable data  available interrupt */
-	outb(PORT+IIR, 0x0); /* Disable FIFO */
-	outb(PORT+MCR, 0x0); /* Disable Loopback */
+	outb(PORT+LCR, 0x0);		/* DLAB = 0 */
+	//outb(PORT+IER, 0x0);		/* Enable no Interrupts */
+	outb(PORT+IER, 0x1);		/* Enable data  available interrupt */
+	outb(PORT+IIR, 0x0);		/* Disable FIFO */
+	outb(PORT+MCR, 0x0);		/* Disable Loopback */
 }
 
-void serial_putc(char c)
+void
+serial_putc(char c)
 {
-	//TODO: write to buffer, send buffer on Interrupt
 	while ((inb(PORT+LSR) & 0x20) == 0);
 
 	outb(PORT, c);
 }
 
-void serial_puts(char *s)
+void
+serial_puts(char *s)
 {
 	while (*s != '\0')
 	{
@@ -33,7 +36,8 @@ void serial_puts(char *s)
 	}
 }
 
-char serial_getc()
+char
+serial_getc()
 {
 	while ((inb(PORT+LSR) & 1) == 0);
 

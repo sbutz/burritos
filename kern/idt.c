@@ -53,13 +53,15 @@ extern void intr_stub_47();
 extern void intr_stub_48();
 
 
-static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
-	uint8_t flags);
-static void handle_exception(struct cpu_state *cpu);
-static struct cpu_state *handle_irq(struct cpu_state *cpu);
-static void handle_syscall(struct cpu_state *cpu);
+static void idt_set_entry(unsigned int, uint32_t, uint16_t, uint8_t);
+static struct cpu_state *handle_exception(struct cpu_state *);
+static struct cpu_state *handle_irq(struct cpu_state *);
+static struct cpu_state *handle_syscall(struct cpu_state *);
+static void cpu_state_dump(struct cpu_state *);
 
-void idt_init()
+
+void
+idt_init()
 {
 	idtp.limit = sizeof(struct idt_entry) * IDT_ENTRIES - 1;
 	idtp.pointer = idt;
@@ -146,18 +148,8 @@ void idt_init()
 	idt_load();
 }
 
-static void idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector,
-	uint8_t flags)
-{
-
-	idt[n].offset_lower = offset & 0xffff;
-	idt[n].selector = selector;
-	idt[n].unused = 0x0;
-	idt[n].flags = flags;
-	idt[n].offset_higher = offset >> 16;
-}
-
-struct cpu_state *handle_intr(struct cpu_state *cpu)
+struct cpu_state *
+handle_intr(struct cpu_state *cpu)
 {
 	/* Exception */
 	if (cpu->intr < 0x20)
@@ -172,7 +164,20 @@ struct cpu_state *handle_intr(struct cpu_state *cpu)
 	return cpu;
 }
 
-void handle_exception(struct cpu_state *cpu)
+
+static void
+idt_set_entry(unsigned int n, uint32_t offset, uint16_t selector, uint8_t flags)
+{
+
+	idt[n].offset_lower = offset & 0xffff;
+	idt[n].selector = selector;
+	idt[n].unused = 0x0;
+	idt[n].flags = flags;
+	idt[n].offset_higher = offset >> 16;
+}
+
+static struct cpu_state *
+handle_exception(struct cpu_state *cpu)
 {
 	kprintf("Exception %x, Error %x, halting Kernel\n", cpu->intr,
 		cpu->error_code);
@@ -183,9 +188,12 @@ void handle_exception(struct cpu_state *cpu)
 	disable_irqs();
 	while (1)
 		cpu_relax();
+
+	return cpu;
 }
 
-struct cpu_state *handle_irq(struct cpu_state *cpu)
+static struct cpu_state *
+handle_irq(struct cpu_state *cpu)
 {
 	struct cpu_state *ret = cpu;
 
@@ -210,7 +218,8 @@ struct cpu_state *handle_irq(struct cpu_state *cpu)
 	return ret;
 }
 
-void handle_syscall(struct cpu_state *cpu)
+static struct cpu_state *
+handle_syscall(struct cpu_state *cpu)
 {
 	switch (cpu->intr - IRQ_OFFSET - 0x10 ) {
 	case 0x0:
@@ -220,9 +229,12 @@ void handle_syscall(struct cpu_state *cpu)
 		kprintf("Interrupt %x\n", cpu->intr);
 		break;
 	}
+
+	return cpu;
 }
 
-void cpu_state_dump(struct cpu_state *cpu)
+static void
+cpu_state_dump(struct cpu_state *cpu)
 {
 	kprintf("\n");
 	kprintf("EAX %x\n", cpu->eax);

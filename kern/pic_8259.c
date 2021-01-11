@@ -2,22 +2,23 @@
 #include "pic_8259.h"
 
 /*
- * PIC ist der Programmable Interrupt Controller.
- * Der PIC besteht aus Master PIC und Slave PIC mit je 8 Kanaelen.
- * Der Slave wird am IRQ2 des Master angeschlossen.
+ * The Programmable Interrupt Controller (PIC) consists of a Master and a Slave.
+ * Each of them has 8 Channels. The Slave is connected to the Mastsers IRQ 2.
  *
- * Auf den ersten Interuptnummer liegen Exceptions und Hardware-Interrupts.
- * Zur Unterscheidung werden die Hardware-Interrupts verschoben. Exceptions
- * koennen nicht verschoben werden. Verschiebe Hardware-Interrupts auf 0x20.
+ * The first Interrupts numbers are reserved for Exceptions.They cannot be
+ * remapped.
+ * To distinct between Exceptions and Hardware Interrupts (IRQs), the IRQs have
+ * to be remapped. Map them to 0x20.
  *
- * Vorgehensweise:
- * 1. Schicke Init-Befehl an Befehlsport (0x20 bzw. 0xa0)
- * 2. Schicke Interrupt-Nummer fuer IRQ bzw IRQ8
- * 3. Schicke fuer Master 0x04, fuer Slave den IRQ an welchem er am Master
- * angeschlossen ist.
- * 4. Schicke Flags (0x01).
+ * Remapping the IRQs:
+ * 1. Send Init Command to the Command Port (0x20 or 0xa0).
+ * 2. Send Interrupt Number for IRQ 0 or 8.
+ * 3. Send the Master's Port where the Slave is connected to the Slave. Send
+ *    0x04 to the Master.
+ * 4. Send Flags (0x01).
  */
-void pic_init()
+void
+pic_init()
 {
 	outb(MASTER_PORT_CMD, 0x11);
 	outb(SLAVE_PORT_CMD, 0x11);
@@ -35,14 +36,16 @@ void pic_init()
 	outb(SLAVE_PORT_DATA, 0x0);
 }
 
-void pic_send_eoi(uint8_t irq)
+void
+pic_send_eoi(uint8_t irq)
 {
 	if (irq >= 0x8)
 		outb(SLAVE_PORT_CMD, PIC_EOI);
 	outb(MASTER_PORT_CMD, PIC_EOI);
 }
 
-void pic_mask_irq(uint8_t irq)
+void
+pic_mask_irq(uint8_t irq)
 {
 	uint8_t mask;
 	uint16_t port;
@@ -61,7 +64,8 @@ void pic_mask_irq(uint8_t irq)
 	outb(port, mask);
 }
 
-void pic_unmask_irq(uint8_t irq)
+void
+pic_unmask_irq(uint8_t irq)
 {
 	uint8_t mask;
 	uint16_t port;

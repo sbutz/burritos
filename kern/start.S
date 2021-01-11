@@ -4,7 +4,10 @@
 #define MB_FLAGS 0x0
 #define MB_CHECKSUM -(MB_MAGIC + MB_FLAGS)
 
-// Multiboot Header, muss in den ersten 8192 Bytes des Image sein
+/*
+ * This is the Multiboot Header.
+ * It must be placed in the first 8kB of the Image.
+ */
 .align 4
 .int	MB_MAGIC
 .int	MB_FLAGS
@@ -17,13 +20,13 @@
 
 .global _start
 _start:
-	// Stack initialisieren
+	/* Init Kernel Stack */
 	mov $kernel_stack, %esp
 
-	// C Main Methode
+	/* Main Entry Point */
 	call main
 
-	// Nichts mehr zu tun, also Interrupts unterbinden und CPU anhalten
+	/* Disabled Interrupts and halt. */
 	cli
 _stop:
 	hlt

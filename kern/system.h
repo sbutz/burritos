@@ -1,5 +1,5 @@
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#ifndef _SYSTEM_H
+#define _SYSTEM_H
 
 extern void cpu_relax();
 extern void enable_irqs();

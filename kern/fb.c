@@ -1,11 +1,12 @@
 #include "fb.h"
 
-static char *video = (char*) 0xb8000;
+static char *video = (char*) 0xb8000; /* VGA Video Memory */
 static int cursor = 0;
 
-static void _fb_scroll();
+static void fb_scroll();
 
-void fb_init()
+void
+fb_init()
 {
 	int i;
 
@@ -14,10 +15,11 @@ void fb_init()
 	cursor = 0;
 }
 
-void fb_putc(char c)
+void
+fb_putc(char c)
 {
 	if (cursor >= BUFFER_SIZE)
-		_fb_scroll();
+		fb_scroll();
 
 	switch(c) {
 		case '\n':
@@ -31,7 +33,9 @@ void fb_putc(char c)
 	cursor += 2;
 }
 
-void _fb_scroll()
+
+void
+fb_scroll()
 {
 	int i;
 

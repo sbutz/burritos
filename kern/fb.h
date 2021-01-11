@@ -1,5 +1,5 @@
-#ifndef FB_H
-#define FB_H
+#ifndef _FB_H
+#define _FB_H
 
 #define BUFFER_SIZE	4000
 #define MAX_LINES	25
@@ -11,7 +11,7 @@
 #define BLUE		0x1
 #define GREEN		0x2
 #define CYAN		0x3
-#define RED			0x4
+#define RED		0x4
 #define MAGENTTA	0x5
 #define BROWN		0x6
 #define LIGHT_GRAY	0x7
@@ -25,6 +25,6 @@
 #define WHITE		0xF
 
 void fb_init();
-void fb_putc(char c);
+void fb_putc(char);
 
 #endif

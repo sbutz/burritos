@@ -49,16 +49,15 @@ static struct cpu_state
 		.eip = (uint32_t) fn,
 		.cs = 0x18 | 0x03, /* Ring 3 */
 
-		.eflags =  0x202, /* Interrupts eingeschaltet: IF = 1 */
-		// IF = 1 => 0x200, Reserved bit 0x002 is always 1
+		.eflags =  0x202, /* Interrupts enabled: IF = 1 */
+		/* IF = 1 => 0x200, Reserved bit 0x002 is always 1 */
 
 		.esp = (uint32_t) user_stack + STACK_SIZE,
 		.ss = 0x20 | 0x03, /* Ring 3 */
 	};
 
 
-	// CPU Zustand auf Stack ablegen damit er durch interrupt handler
-	// wiederhergestellt (= gestartet) werden kann
+	/* Push Cpu state on Stack. IRET will restore the pushed state. */
 	struct cpu_state *task = (void *) (stack + STACK_SIZE - sizeof(state));
 	*task = state;
 
@@ -68,11 +67,11 @@ static struct cpu_state
 struct cpu_state *
 schedule(struct cpu_state *cpu)
 {
-	// Alten Cpu Stand sichern
+	/* Save old cpu state */
 	if (current_task >= 0)
 		task[current_task] = cpu;
 
-	// Naechsten Task auswaehlen und zurueckgeben
+	/* Select next task */
 	current_task = (current_task + 1) % num_tasks;
 	return task[current_task];
 }
@@ -127,9 +126,11 @@ malicous_task_disable_inter()
 	}
 }
 
-// Overwrite foreign cpu_state block
-// TODO: just overwrite forgein saved programm counter
-// Should not work after implementing memory virtualisation
+/*
+ * Overwrite foreign cpu_state block.
+ * TODO: Manipulate program counter.
+ * Should not work after implementing memory virtualisation.
+ */
 static void
 malicous_task_write()
 {

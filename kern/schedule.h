@@ -1,9 +1,9 @@
-#ifndef SCHEDULE_H
-#define SCHEDULE_H
+#ifndef _SCHEDULE_H
+#define _SCHEDULE_H
 
 #include "idt.h"
 
 void schedule_init();
-struct cpu_state *schedule(struct cpu_state *cpu);
+struct cpu_state *schedule(struct cpu_state *);
 
 #endif

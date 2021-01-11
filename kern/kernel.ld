@@ -3,15 +3,16 @@ ENTRY(_start)
 SECTIONS
 {
 	/*
+	 * . is the current Position in this file.
 	 * . ist die aktuelle Position in der Datei.
 	 *
-	 * Adresse an die der Kernel geladen wird.
-	 * Mindestends jedoch 1MB (entspricht 0x100000).
+	 * This is the Address the kernel will be loaded.
+	 * At least 1MB (0x100000) must remain free.
 	 */
 	. = 0x100000;
 
 	/*
-	 * Multiboot-Header muss in den ersten 8kB sein.
+	 * Multiboot-Header has to be in the first 8kB.
 	 */
 	.text : {
 		*(multiboot)

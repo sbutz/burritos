@@ -4,10 +4,10 @@
 
 struct tss_entry
 {
-   uint32_t prev_tss;   // Linked list entry if using hardware task switching.
-   uint32_t esp0;       // Stack pointer to load when changing to kernel mode.
-   uint32_t ss0;        // Stack segment to load when changing to kernel mode.
-   uint32_t esp1;       // The remaining fields are unused.
+   uint32_t prev_tss; /* Linked list entry if using hardware task switching. */
+   uint32_t esp0;     /* Stack pointer to load when changing to kernel mode. */
+   uint32_t ss0;      /* Stack segment to load when changing to kernel mode. */
+   uint32_t esp1;     /* The remaining fields are unused. */
    uint32_t ss1;
    uint32_t esp2;
    uint32_t ss2;
@@ -42,7 +42,8 @@ static void gdt_set_entry(unsigned int, uint32_t, uint32_t, uint8_t, uint8_t);
 static tss_entry_t tss;
 
 
-void gdt_init()
+void
+gdt_init()
 {
 	gdtp.limit = GDT_ENTRIES * sizeof(struct gdt_entry) - 1;
 	gdtp.pointer = gdt;
@@ -75,11 +76,11 @@ void gdt_init()
 		GDT_ACCESS_PRESENT | GDT_ACCESS_RING3, 0);
 
 	/* Task State Segment Double Fault */
-	//TODO: implement
+	/*TODO: implement */
 	
 	gdt_load();
 
-	tss.ss0 = 0x10; // Kernel Data Segment
+	tss.ss0 = 0x10; /* Kernel Data Segment */
 	tss_load();
 }
 

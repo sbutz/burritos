@@ -11,7 +11,7 @@ idt_load:
 	intr_stub_\num:
 		# Error Code
 		push $0x0
-		# Interrupt Nummer
+		# Interrupt Number
 		push $\num
 		jmp common_intr_handler
 .endm
@@ -19,7 +19,7 @@ idt_load:
 .macro intr_stub_error_code num
 	.globl intr_stub_\num
 	intr_stub_\num:
-		# Interrupt Nummer
+		# Interrupt Number
 		push $\num
 		jmp common_intr_handler
 .endm
@@ -34,7 +34,7 @@ common_intr_handler:
 	push %ebx
 	push %eax
 
-	# Kernel Datasegment (GDT Offset)
+	# Kernel Datasegment
 	mov $0x10, %ax
 	mov %ax, %ds
 	mov %ax, %es
@@ -42,10 +42,10 @@ common_intr_handler:
 	# Passing pointer to cpu state to interrupt handler
 	push %esp
 	call handle_intr
-	# Pop pointer
+	# Pop passed pointer
 	mov %eax, %esp
 
-	# User Datasegment (GDT Offset)
+	# User Datasegment
 	mov $0x23, %ax
 	mov %ax, %ds
 	mov %ax, %es
@@ -59,7 +59,7 @@ common_intr_handler:
 	pop %edi
 	pop %ebp
 
-	# Interrupt Nummer und Error Code loeschen
+	# Remove interrupt number and error code
 	add $0x8, %esp
 
 	iret

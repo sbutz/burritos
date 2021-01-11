@@ -1,7 +1,7 @@
-#ifndef CONSOLE_H
-#define CONSOLE_H
+#ifndef _CONSOLE_H
+#define _CONSOLE_H
 
 void console_init();
-int kprintf(const  char *fmt, ...);
+int kprintf(const  char *, ...);
 
 #endif

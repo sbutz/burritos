@@ -1,5 +1,5 @@
-#ifndef SERIAL_H
-#define SERIAL_H
+#ifndef _SERIAL_H
+#define _SERIAL_H
 
 #define IER 1
 #define IIR 2
@@ -12,8 +12,8 @@
 #define BAUD 9600
 
 void serial_init();
-void serial_putc(char c);
-void serial_puts(char *s);
+void serial_putc(char);
+void serial_puts(char *);
 char serial_getc();
 
 #endif

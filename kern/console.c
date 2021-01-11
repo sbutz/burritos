@@ -6,16 +6,18 @@
 static char HEX[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
 	'b', 'c', 'd', 'e', 'f' };
 
-static int _printc(char c);
-static int _printp(void *ptr);
-static int _printh(unsigned int num);
+static int _printc(char);
+static int _printp(void *);
+static int _printh(unsigned int);
 
-void console_init()
+void
+console_init()
 {
 	serial_init();
 }
 
-int kprintf(const char *fmt, ...)
+int
+kprintf(const char *fmt, ...)
 {
 	int i, total;
 	va_list args;
@@ -44,18 +46,22 @@ int kprintf(const char *fmt, ...)
 	return total;
 }
 
-static int _printc(char c)
+
+static int
+_printc(char c)
 {
 	serial_putc(c);
 	return 1;
 }
 
-static int _printp(void *ptr)
+static int
+_printp(void *ptr)
 {
 	return _printh((unsigned int) ptr);
 }
 
-static int _printh(unsigned int num)
+static int
+_printh(unsigned int num)
 {
 	int i, total, digit;
 
