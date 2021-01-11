@@ -1,6 +1,7 @@
 include ../Makefile.inc
 
 OBJS = $(patsubst %.c, %.o, $(wildcard *.c))
+OBJS += $(patsubst %.S, %.s, $(wildcard *.S))
 
 all: libc.a
 

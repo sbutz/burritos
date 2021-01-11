@@ -1,10 +1,10 @@
-#ifndef STRING_H
-#define STRING_H
+#ifndef _STRING_H
+#define _STRING_H
 
 #define NULL ((void*) 0)
 
 typedef unsigned int size_t;
 
-int strncmp(const char *str1, const char *str2, size_t size);
+int strncmp(const char *, const char *, size_t);
 
 #endif
