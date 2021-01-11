@@ -11,10 +11,15 @@
 - VGA output
 - Interrupts
 - Charwise serial i/o
-- Task switching (only Ring 0)
+- Task switching
+- Usermode
 
 ## TODO
-Basic shell: read input, react to input
+- Basic shell: read input, react to input
+- Test: successful boot, userspace has no privileges, memory virtualization
+- Better kprintf implementation
+- Build Disk Image
+- Test: Syscall while interrupt? Prevent Timer Interrupt with Syscall?
 
 ## Debugging
 Qemu Monitor:
