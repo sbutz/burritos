@@ -1,7 +1,6 @@
 include ../Makefile.inc
 
-C_SRCS = $(wildcard '*.c')
-OBJS = $(addsuffix .o,$(basename $(C_SRCS)))
+OBJS = $(patsubst %.c, %.o, $(wildcard *.c))
 
 all: libc.a
 
