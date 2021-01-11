@@ -1,6 +1,7 @@
 #include <stdarg.h>
 
 #include "console.h"
+#include "fb.h"
 #include "uart_8250.h"
 
 static char HEX[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
@@ -13,6 +14,7 @@ static int _printh(unsigned int);
 void
 console_init()
 {
+	fb_init();
 	serial_init();
 }
 
@@ -50,6 +52,7 @@ kprintf(const char *fmt, ...)
 static int
 _printc(char c)
 {
+	fb_putc(c);
 	serial_putc(c);
 	return 1;
 }
