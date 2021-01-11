@@ -3,6 +3,7 @@
 #include "idt.h"
 #include "pic_8259.h"
 #include "pit_825x.h"
+#include "schedule.h"
 #include "system.h"
 
 void
