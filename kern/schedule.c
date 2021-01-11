@@ -1,3 +1,5 @@
+#include <syscall.h>
+
 #include "console.h"
 #include "gdt.h"
 #include "schedule.h"
@@ -85,7 +87,7 @@ task_a()
 		i++;
 		if (i == 0x0fffffff)
 		{
-			kprintf("A\n");
+			syscall(0x1);
 			i = 0;
 		}
 	}
@@ -101,20 +103,28 @@ task_b()
 		i++;
 		if (i == 0x0fffffff)
 		{
-			kprintf("B\n");
+			syscall(0x2);
 			i = 0;
 		}
 	}
 }
 
-// Disable interrrupts to prevent task switch
-// Should not work after implementing userspace
 static void
 malicous_task_disable_inter()
 {
+	int i;
+
 	asm("cli");
+
 	while (1)
-		kprintf("It's just Rick and Morty\n");
+	{
+		i++;
+		if (i == 0x0fffffff)
+		{
+			syscall(0x0);
+			i = 0;
+		}
+	}
 }
 
 // Overwrite foreign cpu_state block
@@ -127,12 +137,19 @@ malicous_task_write()
 	uint8_t *p;
 	int i;
 
-	for (i = 0; i < sizeof(struct cpu_state); i++)
+	for (i = 0; i < 2 * 4096; i++)
 	{
-		p = (void *) (&s - 4096 - i);
+		p = (void *) (&s - 2 * 4096 - i);
 		*p = 0x0;
 	}
 
 	while (1)
-		kprintf("A hundred years Rick and Morty\n");
+	{
+		i++;
+		if (i == 0x0fffffff)
+		{
+			syscall(0x0);
+			i = 0;
+		}
+	}
 }
