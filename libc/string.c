@@ -11,7 +11,8 @@ int strncmp(const char *str1, const char *str2, size_t size )
 			if (str1[i] == '\0')
 				return 0;
 		}
-		else {
+		else
+		{
 			if (str1[i] > str2[i])
 				return 1;
 			else
