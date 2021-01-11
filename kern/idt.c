@@ -212,7 +212,14 @@ struct cpu_state *handle_irq(struct cpu_state *cpu)
 
 void handle_syscall(struct cpu_state *cpu)
 {
-	kprintf("Interrupt %x\n", cpu->intr);
+	switch (cpu->intr - IRQ_OFFSET - 0x10 ) {
+	case 0x0:
+		kprintf("Syscall: EAX = %x\n", cpu->eax);
+		break;
+	default:
+		kprintf("Interrupt %x\n", cpu->intr);
+		break;
+	}
 }
 
 void cpu_state_dump(struct cpu_state *cpu)
