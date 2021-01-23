@@ -19,6 +19,7 @@
 - Test: successful boot, userspace has no privileges, memory virtualization
 - Better kprintf implementation
 - Build Disk Image
+- Test on Real Hardware
 - Test: Syscall while interrupt? Prevent Timer Interrupt with Syscall?
 
 ## Debugging
