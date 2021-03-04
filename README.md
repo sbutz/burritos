@@ -1,9 +1,11 @@
-# os
+# burritos
+An i386 OS.
 
 ## Build Requirements
 - make
 - gcc
-- genisoimage
+- xorriso
+- grub-mkrescue
 - qemu (to run)
 
 ## Features
@@ -18,9 +20,11 @@
 - Basic shell: read input, react to input
 - Test: successful boot, userspace has no privileges, memory virtualization
 - Better kprintf implementation
-- Build Disk Image
-- Test on Real Hardware
+- Test: Boot-Test
 - Test: Syscall while interrupt? Prevent Timer Interrupt with Syscall?
+- Test: Memory access of user process (kernel mem, other task mem)
+- Test: Mutliboot-Compliance
+- Test: Posix-Compliance
 
 ## Debugging
 Qemu Monitor:

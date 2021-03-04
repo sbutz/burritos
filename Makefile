@@ -9,15 +9,13 @@ $(SUBDIRS):
 
 iso: $(SUBDIRS)
 	cp kern/kernel iso/boot/kernel
-	genisoimage \
-		-R \
-		-b boot/grub/stage2_eltorito \
-		-no-emul-boot \
-		-boot-load-size 4 \
-		-A os \
-		-input-charset utf8 \
-		-quiet \
-		-boot-info-table \
+	grub-mkrescue \
+		--fonts="" \
+		--install-modules="normal multiboot" \
+		--locales="" \
+		--modules="" \
+		--themes="" \
+		-d /usr/lib/grub/i386-pc/ \
 		-o os.iso \
 		iso/
 
