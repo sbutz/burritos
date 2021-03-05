@@ -10,7 +10,7 @@ void
 main()
 {
 	console_init();
-	kprintf("\n\nsButz OS v1.0\n\n");
+	kprintf("\n\nBurritos v1.0\n\n");
 
 	kprintf("[*] Init Global Descriptor Table\n");
 	gdt_init();
