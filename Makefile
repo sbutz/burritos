@@ -45,6 +45,7 @@ run: $(OBJDIR)/burritos.iso
 		-m 32 \
 		-no-reboot \
 		-drive format=raw,media=cdrom,file=$< \
+		-boot d \
 		-nographic \
 		-monitor telnet:127.0.0.1:55555,server,nowait
 
