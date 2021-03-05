@@ -6,20 +6,33 @@ OBJDIR := $(GIT_ROOT)/obj
 all: $(OBJDIR)/burritos.iso
 
 # Basic Rules
-include Rules.mk
+include $(GIT_ROOT)/Rules.mk
 
-# Include subdirectories
+# Module Rules
 include $(GIT_ROOT)/kern/module.mk
 include $(GIT_ROOT)/libc/module.mk
 
-
+GRUB_MODULES = \
+	normal \
+	multiboot \
+	part_acorn \
+	part_amiga \
+	part_apple \
+	part_bsd \
+	part_dfly \
+	part_dvh \
+	part_gpt \
+	part_msdos \
+	part_plan \
+	part_sun \
+	part_sunpc
 $(OBJDIR)/burritos.iso: $(OBJDIR)/kern/kernel grub.cfg
 	mkdir -p $(OBJDIR)/iso/boot/grub
 	cp $(OBJDIR)/kern/kernel $(OBJDIR)/iso/boot/kernel
 	cp grub.cfg $(OBJDIR)/iso/boot/grub/grub.cfg
 	grub-mkrescue \
 		--fonts="" \
-		--install-modules="normal multiboot" \
+		--install-modules="$(GRUB_MODULES)" \
 		--locales="" \
 		--modules="" \
 		--themes="" \
