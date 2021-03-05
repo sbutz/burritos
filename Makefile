@@ -1,14 +1,22 @@
-SUBDIRS += libc
-SUBDIRS += kern
+# Globals
+GIT_ROOT := $(shell git rev-parse --show-toplevel)
+OBJDIR := $(GIT_ROOT)/obj
 
-all: $(SUBDIRS) iso run
+# Default target
+all: $(OBJDIR)/burritos.iso
 
-.PHONY: $(SUBDIRS)
-$(SUBDIRS):
-	$(MAKE) -C $@
+# Basic Rules
+include Rules.mk
 
-iso: $(SUBDIRS)
-	cp kern/kernel iso/boot/kernel
+# Include subdirectories
+include $(GIT_ROOT)/kern/module.mk
+include $(GIT_ROOT)/libc/module.mk
+
+
+$(OBJDIR)/burritos.iso: $(OBJDIR)/kern/kernel grub.cfg
+	mkdir -p $(OBJDIR)/iso/boot/grub
+	cp $(OBJDIR)/kern/kernel $(OBJDIR)/iso/boot/kernel
+	cp grub.cfg $(OBJDIR)/iso/boot/grub/grub.cfg
 	grub-mkrescue \
 		--fonts="" \
 		--install-modules="normal multiboot" \
@@ -16,20 +24,17 @@ iso: $(SUBDIRS)
 		--modules="" \
 		--themes="" \
 		-d /usr/lib/grub/i386-pc/ \
-		-o os.iso \
-		iso/
+		-o $@ \
+		$(OBJDIR)/iso/
 
-run: iso
+run: $(OBJDIR)/burritos.iso
 	qemu-system-i386 \
 		-m 32 \
 		-no-reboot \
-		-drive format=raw,media=cdrom,file=os.iso \
+		-drive format=raw,media=cdrom,file=$< \
 		-nographic \
 		-monitor telnet:127.0.0.1:55555,server,nowait
 
 .PHONY: clean
 clean:
-	for dir in $(SUBDIRS); do \
-		$(MAKE) -C $$dir clean; \
-	done
-	rm -f os.iso
+	rm -rf $(OBJDIR)

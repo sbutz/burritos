@@ -1,5 +1,1 @@
-*.o
-*.s
-*.a
-kernel
-os.iso
+obj/
