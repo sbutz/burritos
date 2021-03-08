@@ -2,7 +2,7 @@ LIBC_SRCS := \
 	string.c \
 	syscall.S
 
-LIBC_OBJS := $(call objects,$(LIBC_SRCS),libc)
+OBJS += $(call add-objects,$(LIBC_SRCS),libc)
 
-$(OBJDIR)/libc/libc.a: $(LIBC_OBJS)
+$(OBJDIR)/libc/libc.a: $(call get-objects,libc)
 	$(AR) rcs $@ $^

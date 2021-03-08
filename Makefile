@@ -1,6 +1,8 @@
 # Globals
 GIT_ROOT := $(shell git rev-parse --show-toplevel)
 OBJDIR := $(GIT_ROOT)/obj
+# Module rules will add to this
+OBJS :=
 
 # Default target
 all: $(OBJDIR)/burritos.iso
@@ -11,6 +13,10 @@ include $(GIT_ROOT)/Rules.mk
 # Module Rules
 include $(GIT_ROOT)/kern/module.mk
 include $(GIT_ROOT)/libc/module.mk
+
+# Dependency Rules
+DEPS := $(addsuffix .d,$(OBJS))
+include $(DEPS)
 
 GRUB_MODULES = \
 	normal \
@@ -26,6 +32,7 @@ GRUB_MODULES = \
 	part_plan \
 	part_sun \
 	part_sunpc
+
 $(OBJDIR)/burritos.iso: $(OBJDIR)/kern/kernel grub.cfg
 	mkdir -p $(OBJDIR)/iso/boot/grub
 	cp $(OBJDIR)/kern/kernel $(OBJDIR)/iso/boot/kernel

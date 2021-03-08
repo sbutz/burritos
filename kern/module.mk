@@ -14,9 +14,13 @@ KERN_SRCS := \
 	start.S \
 	system.S
 
-KERN_OBJS := $(call objects,$(KERN_SRCS),kern)
+OBJS += $(call add-objects,$(KERN_SRCS),kern)
 
 LD_ADD := -T$(GIT_ROOT)/kern/kernel.ld
 
-$(OBJDIR)/kern/kernel: $(KERN_OBJS) $(GIT_ROOT)/kern/kernel.ld $(OBJDIR)/libc/libc.a
-	$(LD) $(LDFLAGS) $(LD_ADD) -o $@ $(KERN_OBJS) -lc
+#TODO: move tasks outside kern to remove cross dependency
+$(OBJDIR)/kern/kernel: \
+		$(call get-objects,kern) \
+		$(GIT_ROOT)/kern/kernel.ld \
+		$(OBJDIR)/libc/libc.a
+	$(LD) $(LDFLAGS) $(LD_ADD) -o $@ $(call get-objects,kern) -lc
