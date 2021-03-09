@@ -31,9 +31,11 @@ GRUB_MODULES = \
 	part_msdos \
 	part_plan \
 	part_sun \
-	part_sunpc
+	part_sunpc \
+	echo \
+	halt
 
-$(OBJDIR)/burritos.iso: $(OBJDIR)/kern/kernel grub.cfg
+$(OBJDIR)/burritos.iso: $(OBJDIR)/kern/kernel grub.cfg Makefile
 	mkdir -p $(OBJDIR)/iso/boot/grub
 	cp $(OBJDIR)/kern/kernel $(OBJDIR)/iso/boot/kernel
 	cp grub.cfg $(OBJDIR)/iso/boot/grub/grub.cfg
