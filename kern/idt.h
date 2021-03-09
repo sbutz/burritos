@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-#define IDT_ENTRIES 256
-
 #define IDT_FLAG_INTERRUPT_GATE 0x06
 #define IDT_FLAG_TRAP_GATE 0x07
 #define IDT_FLAG_TASK_GATE 0x05
@@ -54,8 +52,5 @@ struct cpu_state
 
 void idt_init();
 struct cpu_state *handle_intr(struct cpu_state *);
-
-struct idt_entry idt[IDT_ENTRIES];
-struct idt_description idtp;
 
 #endif

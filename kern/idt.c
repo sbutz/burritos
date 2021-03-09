@@ -8,7 +8,7 @@
 #include "uart_8250.h"
 #include "schedule.h"
 
-extern void idt_load();
+extern void idt_load(struct idt_description *);
 
 /* Exceptions */
 extern void intr_stub_0();
@@ -59,6 +59,9 @@ static struct cpu_state *handle_irq(struct cpu_state *);
 static struct cpu_state *handle_syscall(struct cpu_state *);
 static void cpu_state_dump(struct cpu_state *);
 
+#define IDT_ENTRIES 256
+static struct idt_entry idt[IDT_ENTRIES];
+static struct idt_description idtp;
 
 void
 idt_init()
@@ -145,7 +148,7 @@ idt_init()
 	idt_set_entry(48, (uintptr_t) &intr_stub_48, 0x8, IDT_FLAG_INTERRUPT_GATE |
 		IDT_FLAG_PRESENT | IDT_FLAG_RING3 | IDT_FLAG_32_BIT);
 
-	idt_load();
+	idt_load(&idtp);
 }
 
 struct cpu_state *

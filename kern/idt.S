@@ -1,9 +1,9 @@
 .section .text
 
-.extern idtp
 .globl idt_load
 idt_load:
-	lidt idtp
+	mov %eax, -8(%ebp)
+	lidt (%eax)
 	ret
 
 .macro intr_stub num

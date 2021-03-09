@@ -1,9 +1,9 @@
 .section .text
 
-.extern gdtp
 .globl gdt_load
 gdt_load:
-	lgdt gdtp
+	mov %eax, -8(%ebp)
+	lgdt (%eax)
 	mov $0x10, %ax
 	mov %ax, %ds
 	mov %ax, %es
