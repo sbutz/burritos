@@ -31,6 +31,5 @@ main()
 	pic_unmask_irq(IRQ_TIMER);
 	enable_irqs();
 
-	while (1)
-		cpu_relax();
+	halt();
 }

@@ -189,8 +189,7 @@ handle_exception(struct cpu_state *cpu)
 	cpu_state_dump(cpu);
 
 	disable_irqs();
-	while (1)
-		cpu_relax();
+	halt();
 
 	return cpu;
 }

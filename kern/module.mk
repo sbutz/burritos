@@ -11,8 +11,8 @@ KERN_SRCS := \
 	pit_825x.c \
 	schedule.c \
 	start.S \
-	system.S
-	uart_8250.c \
+	system.c \
+	uart_8250.c
 
 OBJS += $(call add-objects,$(KERN_SRCS),kern)
 
