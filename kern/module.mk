@@ -9,6 +9,7 @@ KERN_SRCS := \
 	main.c \
 	pic_8259.c \
 	pit_825x.c \
+	pmm.c \
 	schedule.c \
 	start.S \
 	system.c \

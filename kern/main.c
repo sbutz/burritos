@@ -1,16 +1,25 @@
 #include "console.h"
 #include "gdt.h"
 #include "idt.h"
+#include "multiboot.h"
 #include "pic_8259.h"
 #include "pit_825x.h"
+#include "pmm.h"
 #include "schedule.h"
 #include "system.h"
 
 void
-main()
+main(struct multiboot_info *mbs)
 {
 	console_init();
-	kprintf("\n\nBurritos v1.0\n\n");
+	kprintf("Burritos\n");
+	kprintf("Version 1.0\n");
+
+	if (mbs->flags & MULTIBOOT_INFO_CMDLINE)
+		kprintf("Cmdline: %s\n", mbs->cmdline);
+
+	kprintf("[*] Init Physical Memory Manager\n");
+	pmm_init(mbs);
 
 	kprintf("[*] Init Global Descriptor Table\n");
 	gdt_init();

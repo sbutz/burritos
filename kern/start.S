@@ -1,7 +1,7 @@
 .section multiboot
 
 #define MB_MAGIC 0x1badb002
-#define MB_FLAGS 0x0
+#define MB_FLAGS 0x2
 #define MB_CHECKSUM -(MB_MAGIC + MB_FLAGS)
 
 /*
@@ -22,6 +22,9 @@
 _start:
 	/* Init Kernel Stack */
 	mov $kernel_stack, %esp
+
+	/* Save Pointer to Mutliboot struct */
+	push %ebx
 
 	/* Main Entry Point */
 	call main
