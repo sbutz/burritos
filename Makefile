@@ -33,7 +33,9 @@ GRUB_MODULES = \
 	part_sun \
 	part_sunpc \
 	echo \
-	halt
+	halt \
+	help \
+	lsmmap
 
 $(OBJDIR)/burritos.iso: $(OBJDIR)/kern/kernel grub.cfg Makefile
 	mkdir -p $(OBJDIR)/iso/boot/grub
