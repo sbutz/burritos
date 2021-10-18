@@ -23,7 +23,7 @@ An i386 OS.
 - Test: Boot-Test
 - Test: Syscall while interrupt? Prevent Timer Interrupt with Syscall?
 - Test: Memory access of user process (kernel mem, other task mem)
-- Test: Mutliboot-Compliance
+- Test: Mutliboot-Compliance (gnu mbchk)
 - Test: Posix-Compliance
 
 ## Debugging

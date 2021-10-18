@@ -39,6 +39,7 @@ kprintf(const char *fmt, ...)
 				total += _prints(va_arg(args, char *));
 				break;
 			case 'x':
+				//TODO: fix for uint64_t
 				total += _printh(va_arg(args, unsigned int));
 				break;
 			}
