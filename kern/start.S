@@ -2,7 +2,7 @@
 
 #define MB_MAGIC 0x1badb002
 #define MB_FLAGS 0x2
-#define MB_CHECKSUM -(MB_MAGIC + MB_FLAGS)
+#define MB_CHECKSUM - (MB_MAGIC + MB_FLAGS)
 
 /*
  * This is the Multiboot Header.

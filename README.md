@@ -1,22 +1,26 @@
 # burritos
-An i386 OS.
+An i386 kernel. Built for self educational purposes.
 
 ## Build Requirements
 - make
 - gcc
 - xorriso
 - grub-mkrescue
-- qemu (to run)
+- qemu (for running)
 
 ## Features
 ### Working
-- VGA output
-- Interrupts
-- Charwise serial i/o
-- Task switching
-- Usermode
+- [x] VGA output
+- [x] Interrupts
+- [x] Charwise serial i/o
+- [x] Task switching
+- [x] Usermode
+- [ ] Paging
 
 ## TODO
+- add programs add multiboot modules, create task per module
+- paging/virtual memory management
+- higher half kernel
 - Basic shell: read input, react to input
 - Test: successful boot, userspace has no privileges, memory virtualization
 - Better kprintf implementation

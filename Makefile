@@ -58,7 +58,8 @@ run: $(OBJDIR)/burritos.iso
 		-drive format=raw,media=cdrom,file=$< \
 		-boot d \
 		-nographic \
-		-monitor telnet:127.0.0.1:55555,server,nowait
+		-monitor telnet:127.0.0.1:55555,server,nowait \
+		#-d int,cpu_reset
 
 .PHONY: clean
 clean:
