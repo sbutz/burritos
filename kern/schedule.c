@@ -10,8 +10,8 @@
 static struct cpu_state *task_init(void *, uint8_t *, uint8_t *);
 static void task_a();
 static void task_b();
-static void malicous_task_disable_inter();
-static void malicous_task_write();
+//static void malicous_task_disable_inter();
+//static void malicous_task_write();
 
 static struct cpu_state *task[MAX_TASKS];
 static int num_tasks;
@@ -108,49 +108,49 @@ task_b()
 	}
 }
 
-static void
-malicous_task_disable_inter()
-{
-	int i;
-
-	asm("cli");
-
-	while (1)
-	{
-		i++;
-		if (i == 0x0fffffff)
-		{
-			syscall(0x0);
-			i = 0;
-		}
-	}
-}
+//static void
+//malicous_task_disable_inter()
+//{
+//	int i;
+//
+//	asm("cli");
+//
+//	while (1)
+//	{
+//		i++;
+//		if (i == 0x0fffffff)
+//		{
+//			syscall(0x0);
+//			i = 0;
+//		}
+//	}
+//}
 
 /*
  * Overwrite foreign cpu_state block.
  * TODO: Manipulate program counter.
  * Should not work after implementing memory virtualisation.
  */
-static void
-malicous_task_write()
-{
-	uint8_t s;
-	uint8_t *p;
-	int i;
-
-	for (i = 0; i < 2 * 4096; i++)
-	{
-		p = (void *) (&s - 2 * 4096 - i);
-		*p = 0x0;
-	}
-
-	while (1)
-	{
-		i++;
-		if (i == 0x0fffffff)
-		{
-			syscall(0x0);
-			i = 0;
-		}
-	}
-}
+//static void
+//malicous_task_write()
+//{
+//	uint8_t s;
+//	uint8_t *p;
+//	int i;
+//
+//	for (i = 0; i < 2 * 4096; i++)
+//	{
+//		p = (void *) (&s - 2 * 4096 - i);
+//		*p = 0x0;
+//	}
+//
+//	while (1)
+//	{
+//		i++;
+//		if (i == 0x0fffffff)
+//		{
+//			syscall(0x0);
+//			i = 0;
+//		}
+//	}
+//}

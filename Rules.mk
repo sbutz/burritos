@@ -3,7 +3,7 @@ CC = cc
 LD = ld
 
 CLIBS := -I $(GIT_ROOT)/libc
-CFLAGS := -m32 -Wall -g -fno-stack-protector -ffreestanding
+CFLAGS := -m32 -Wall -Werror -g -fno-stack-protector -ffreestanding
 LDFLAGS := -n -melf_i386 -L $(OBJDIR)/libc
 
 # C files
