@@ -1,6 +1,6 @@
 LIBC_SRCS := \
 	string.c \
-	syscall.S
+	syscall.c
 
 OBJS += $(call add-objects,$(LIBC_SRCS),libc)
 
