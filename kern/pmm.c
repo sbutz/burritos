@@ -85,8 +85,7 @@ pmm_mark_page_used(uintptr_t addr)
 {
 	int page, idx, shift;
 
-	if (addr % PAGE_SIZE != 0)
-		panic("Address is not page aligned");
+	//TODO: assert(addr % PAGE_SIZE == 0);
 
 	page = addr / PAGE_SIZE;
 	idx = page / BIT_SIZE(bitmap[0]);
@@ -98,20 +97,20 @@ pmm_mark_page_used(uintptr_t addr)
 void *
 pmm_alloc()
 {
-	int i;
+	int i, j;
 	uintptr_t addr;
 
 	for (i = 0; i < BITMAP_SIZE; i++)
 	{
 		if (bitmap[i] != 0xffffffff)
 		{
-			addr = i * sizeof(bitmap[0]) * PAGE_SIZE;
-			for (i = 0; i < sizeof(bitmap[0]); i++)
+			addr = i * BIT_SIZE(bitmap[0]) * PAGE_SIZE;
+			for (j = 0; j < sizeof(bitmap[0]); j++)
 			{
-				if (! (bitmap[i] & (1 << i)))
+				if (! (bitmap[i] & (1 << j)))
 				{
-					addr += i * PAGE_SIZE;
-					bitmap[i] |= 1 << i;
+					addr += j * PAGE_SIZE;
+					bitmap[i] |= 1 << j;
 					return (void *) addr;
 				}
 			}
