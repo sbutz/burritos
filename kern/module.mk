@@ -1,19 +1,20 @@
 KERN_SRCS := \
 	console.c \
 	fb.c \
-	gdt.S \
 	gdt.c \
-	idt.S \
 	idt.c \
 	io.c \
 	main.c \
 	pic_8259.c \
 	pit_825x.c \
 	pmm.c \
+	queue.c \
 	schedule.c \
-	start.S \
 	system.c \
-	uart_8250.c
+	uart_8250.c \
+	gdt.S \
+	idt.S \
+	start.S
 
 OBJS += $(call add-objects,$(KERN_SRCS),kern)
 
