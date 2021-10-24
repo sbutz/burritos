@@ -18,9 +18,13 @@ An i386 kernel. Built for self educational purposes.
 - [ ] Paging
 
 ## TODO
-- add programs add multiboot modules, create task per module
-- paging/virtual memory management
-- higher half kernel
+- Programs as mutliboot modules
+- Higher half kernel (for vm86 mode)
+- Register irqs in modules
+- Implement assert
+- Implement kmalloc
+- Implement memory allocation syscall
+- Implement userspace heap
 - Basic shell: read input, react to input
 - Test: successful boot, userspace has no privileges, memory virtualization
 - Better kprintf implementation
