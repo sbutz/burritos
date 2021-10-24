@@ -161,8 +161,10 @@ handle_intr(struct cpu_state *cpu)
 	else if (cpu->intr < 0x30)
 		return handle_irq(cpu);
 	/* Syscalls */
+	else if (cpu->intr == 0x30)
+		return handle_syscall(cpu);
 	else
-		handle_syscall(cpu);
+		kprintf("Unknown Interrupt %x\n", cpu->intr);
 
 	return cpu;
 }
@@ -223,12 +225,9 @@ handle_irq(struct cpu_state *cpu)
 static struct cpu_state *
 handle_syscall(struct cpu_state *cpu)
 {
-	switch (cpu->intr - IRQ_OFFSET - 0x10 ) {
-	case 0x0:
-		kprintf("Syscall: EAX = %x\n", cpu->eax);
-		break;
+	switch (cpu->eax) {
 	default:
-		kprintf("Interrupt %x\n", cpu->intr);
+		kprintf("Syscall %x\n", cpu->eax);
 		break;
 	}
 
