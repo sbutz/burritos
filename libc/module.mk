@@ -1,4 +1,5 @@
 LIBC_SRCS := \
+	stdlib.c \
 	string.c \
 	syscall.c
 

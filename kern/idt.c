@@ -226,6 +226,10 @@ static struct cpu_state *
 handle_syscall(struct cpu_state *cpu)
 {
 	switch (cpu->eax) {
+	/* Exit task */
+	case 0x10:
+		exit_current_task();
+		return schedule(cpu);
 	default:
 		kprintf("Syscall %x\n", cpu->eax);
 		break;

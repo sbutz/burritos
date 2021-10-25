@@ -1,79 +1,123 @@
+#include <stddef.h>
+#include <stdlib.h>
 #include <syscall.h>
 
 #include "console.h"
 #include "gdt.h"
+#include "pmm.h"
+#include "queue.h"
 #include "schedule.h"
+#include "system.h"
 
-#define STACK_SIZE 4096
-#define MAX_TASKS 2
+struct task {
+	struct cpu_state *state;
+	uint8_t *stack;
+	uint8_t *user_stack;
+};
 
-static struct cpu_state *task_init(void *, uint8_t *, uint8_t *);
+static struct task *task_create(void *);
+static void task_delete(struct task *);
 static void task_a();
 static void task_b();
+static void idle();
 //static void malicous_task_disable_inter();
 //static void malicous_task_write();
 
-static struct cpu_state *task[MAX_TASKS];
-static int num_tasks;
-static int current_task;
+static struct queue *tasks;
+static struct task *current_task;
+static struct task *idle_task;
 
-static uint8_t stack_a[STACK_SIZE];
-static uint8_t user_stack_a[STACK_SIZE];
-static uint8_t stack_b[STACK_SIZE];
-static uint8_t user_stack_b[STACK_SIZE];
 
 void
 schedule_init()
 {
-	task[0] = task_init(task_a, stack_a, user_stack_a);
-	task[1] = task_init(task_b, stack_b, user_stack_b);
-	num_tasks = 2;
-	current_task = -1;
+	tasks = queue_init();
+	current_task = NULL;
+	idle_task = task_create(idle);
+
+	queue_push(tasks, task_create(task_a));
+	queue_push(tasks, task_create(task_b));
 }
 
-static struct cpu_state
-*task_init(void *fn, uint8_t *stack, uint8_t *user_stack)
+void
+exit_current_task()
 {
-	struct cpu_state state = {
-		.eax = 0,
-		.ebx = 0,
-		.ecx = 0,
-		.edx = 0,
-		.esi = 0,
-		.edi = 0,
-		.ebp = 0,
-
-		//.intr = 0,
-		//.error_code = 0,
-
-		.eip = (uint32_t) fn,
-		.cs = 0x18 | 0x03, /* Ring 3 */
-
-		.eflags =  0x202, /* Interrupts enabled: IF = 1 */
-		/* IF = 1 => 0x200, Reserved bit 0x002 is always 1 */
-
-		.esp = (uint32_t) user_stack + STACK_SIZE,
-		.ss = 0x20 | 0x03, /* Ring 3 */
-	};
-
-
-	/* Push Cpu state on Stack. IRET will restore the pushed state. */
-	struct cpu_state *task = (void *) (stack + STACK_SIZE - sizeof(state));
-	*task = state;
-
-	return task;
+	task_delete(current_task);
+	current_task = NULL;
 }
 
 struct cpu_state *
 schedule(struct cpu_state *cpu)
 {
 	/* Save old cpu state */
-	if (current_task >= 0)
-		task[current_task] = cpu;
+	if (current_task != NULL)
+	{
+		current_task->state = cpu;
+		queue_push(tasks, current_task);
+	}
 
 	/* Select next task */
-	current_task = (current_task + 1) % num_tasks;
-	return task[current_task];
+	current_task = queue_pop(tasks);
+	if (current_task == NULL)
+		current_task = idle_task;
+
+	return current_task->state;
+}
+
+static struct task *
+task_create(void *fn)
+{
+	uintptr_t *exit_fn;
+	struct cpu_state *state;
+	struct task *t;
+
+	t = pmm_alloc();
+	t->state = pmm_alloc();
+	t->stack = pmm_alloc();
+	t->user_stack = pmm_alloc();
+
+	t->state->eax = 0;
+	t->state->ebx = 0;
+	t->state->ecx = 0;
+	t->state->edx = 0;
+	t->state->esi = 0;
+	t->state->edi = 0;
+	t->state->ebp = 0;
+	//t->state->intr = 0;
+	//t->state->error_code = 0;
+	t->state->eip = (uint32_t) fn;
+	t->state->cs = 0x18 | 0x03; /* Ring 3 */
+	t->state->eflags =  0x202; /* Interrupts enabled: IF = 1 */
+	/* IF = 1 => 0x200, Reserved bit 0x002 is always 1 */
+	t->state->esp = (uint32_t) t->user_stack + PAGE_SIZE;
+	t->state->ss = 0x20 | 0x03; /* Ring 3 */
+
+	/* Place exit function on stack */
+	/* TODO: Test: what happens if modified by user */
+	t->state->esp -= sizeof(uintptr_t);
+	exit_fn = (void *) t->state->esp;
+	*exit_fn = (uintptr_t) exit;
+
+	/* Push Cpu state on Stack. IRET will restore the pushed state. */
+	state = (void *) (t->stack + PAGE_SIZE - sizeof(t->state));
+	*state = *(t->state);
+
+	return t;
+}
+
+static void
+task_delete(struct task *t)
+{
+	pmm_free(t->stack);
+	pmm_free(t->user_stack);
+	pmm_free(t);
+}
+
+static void
+idle()
+{
+	while(1)
+		halt();
 }
 
 static void
@@ -103,9 +147,12 @@ task_b()
 		if (i == 0x0fffffff)
 		{
 			syscall(0x2);
-			i = 0;
+			break;
 		}
 	}
+	syscall(0x3);
+	syscall(0x3);
+	return;
 }
 
 //static void

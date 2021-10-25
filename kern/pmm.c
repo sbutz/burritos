@@ -9,7 +9,6 @@ extern const void kernel_end;
 
 
 #define MAX_MEM		4294967296
-#define PAGE_SIZE	4096
 #define BITMAP_SIZE	MAX_MEM / PAGE_SIZE / sizeof(uint32_t)
 #define BIT_SIZE(x)	(sizeof(x) * 8)
 static uint32_t bitmap[BITMAP_SIZE];
