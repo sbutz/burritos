@@ -1,5 +1,8 @@
 # burritos
-An i386 kernel. Built for self educational purposes.
+
+An i386 kernel.
+Built for self educational purposes
+(to compensate for the disappointing operating system course at OTH).
 
 ## Build Requirements
 - make
@@ -9,7 +12,6 @@ An i386 kernel. Built for self educational purposes.
 - qemu (for running)
 
 ## Features
-### Working
 - [x] VGA output
 - [x] Interrupts
 - [x] Charwise serial i/o
@@ -26,8 +28,8 @@ An i386 kernel. Built for self educational purposes.
 - Implement memory allocation syscall
 - Implement userspace heap
 - Basic shell: read input, react to input
-- Test: successful boot, userspace has no privileges, memory virtualization
 - Better kprintf implementation
+- Test: successful boot, userspace has no privileges, memory virtualization
 - Test: Boot-Test
 - Test: Syscall while interrupt? Prevent Timer Interrupt with Syscall?
 - Test: Memory access of user process (kernel mem, other task mem)
