@@ -14,6 +14,10 @@ static struct gdt_description gdtp;
 static struct tss_entry tss;
 
 
+/*
+ * TODO: document what the segments are used for (especially TSS).
+ */
+
 void
 gdt_init()
 {

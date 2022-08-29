@@ -8,11 +8,13 @@
 #include "queue.h"
 #include "schedule.h"
 #include "system.h"
+#include "vmm.h"
 
 struct task {
 	struct cpu_state *state;
 	uint8_t *stack;
 	uint8_t *user_stack;
+	struct vmm_context *vmm_ctx;
 };
 
 static struct task *task_create(void *);
@@ -71,10 +73,18 @@ task_create(void *fn)
 	struct cpu_state *state;
 	struct task *t;
 
+	//TODO: pmm_alloc durch vmm_alloc ersetzen
+	//kernel memory in alle vmm_contexts mappen in vmm_context_create()
+	//schedule muss vmm_ctx herstellen
+	//vmm_map_page braucht flag fuer USER/KERNEL Memory
+	//free methode um allen speicher in page tables (mit USER Flag) freizugeben
+	//syscall fuer memory alloc
+
 	t = pmm_alloc();
 	t->state = pmm_alloc();
 	t->stack = pmm_alloc();
 	t->user_stack = pmm_alloc();
+	t->vmm_ctx = vmm_context_create();
 
 	t->state->eax = 0;
 	t->state->ebx = 0;

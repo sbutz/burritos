@@ -1,6 +1,19 @@
 #include "string.h"
 
-int strncmp(const char *str1, const char *str2, size_t size )
+void *
+memset(void *ptr, int value, size_t num)
+{
+	int i;
+	char *p;
+
+	for (p = (char *) ptr, i = 0; i < num; i++)
+		p[i] = value;
+
+	return ptr;
+}
+
+int
+strncmp(const char *str1, const char *str2, size_t size )
 {
 	int i;
 

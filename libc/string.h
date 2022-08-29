@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 
+void *memset(void *, int, size_t);
 int strncmp(const char *, const char *, size_t);
 
 #endif

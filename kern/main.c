@@ -7,6 +7,7 @@
 #include "pmm.h"
 #include "schedule.h"
 #include "system.h"
+#include "vmm.h"
 
 void
 main(struct multiboot_info *mbs)
@@ -20,6 +21,9 @@ main(struct multiboot_info *mbs)
 
 	kprintf("[*] Init Physical Memory Manager\n");
 	pmm_init(mbs);
+
+	kprintf("[*] Init Virtual Memory Manager\n");
+	vmm_init();
 
 	kprintf("[*] Init Global Descriptor Table\n");
 	gdt_init();

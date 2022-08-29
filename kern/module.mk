@@ -12,6 +12,7 @@ KERN_SRCS := \
 	schedule.c \
 	system.c \
 	uart_8250.c \
+	vmm.c \
 	gdt.S \
 	idt.S \
 	start.S
